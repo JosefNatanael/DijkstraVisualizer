@@ -31,6 +31,7 @@ protected:
 
 private slots:
     void onVertexClicked(Vertex*);
+    void onPromptCreatePair(Vertex*);
 
 private:
     QGraphicsScene* graphicsScene;
@@ -39,7 +40,6 @@ private:
     Vertex* startVertex = nullptr;
 
 signals:
-
 };
 
 #endif // GRAPHAREA_H

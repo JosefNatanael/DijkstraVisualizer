@@ -35,6 +35,11 @@ public:
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
     void changeColor(QColor color);
 
+    void setPosData(QPoint point) { xPos = point.x(); yPos = point.y(); }
+    QPoint getPosData() const { return QPoint(xPos, yPos); }
+
+    void setCandidatePairFound(bool b) { candidatePairFound = b; }
+
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 
@@ -50,8 +55,11 @@ private:
     GraphArea* graphArea;
     QColor vertexColor = Qt::black;
 
+    bool candidatePairFound = false;
+
 signals:
     void vertexClicked(Vertex*);
+    void promptCreatePair(Vertex*);
 };
 
 #endif // VERTEX_H

@@ -3,9 +3,9 @@
 #include "Edge.h"
 
 #include <QDebug>
-#include <QInputDialog>
 #include "Utilities/WindowHelper.h"
 #include <QDesktopWidget>
+#include <QInputDialog>
 
 #include <limits>
 
@@ -18,7 +18,7 @@ GraphArea::GraphArea(QWidget *parent)
     , graphicsScene(new QGraphicsScene(this))
 {
     setScene(graphicsScene);
-    scene()->installEventFilter(this);
+//    scene()->installEventFilter(this);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
@@ -71,10 +71,14 @@ void GraphArea::mousePressEvent(QMouseEvent* event)
         Vertex* vertex = new Vertex(this);
         graphicsScene->addItem(vertex);
         vertex->setPos(event->pos());
+        vertex->setPosData(event->pos());
         connect(vertex, &Vertex::vertexClicked, this, &GraphArea::onVertexClicked);
+        connect(vertex, &Vertex::promptCreatePair, this, &GraphArea::onPromptCreatePair);
         startVertex = nullptr;
         break;
     }
+    case Cursor::EDGE:
+        break;
     case Cursor::START:
         startVertex = nullptr;
         break;
@@ -86,18 +90,28 @@ void GraphArea::mousePressEvent(QMouseEvent* event)
 
 void GraphArea::onVertexClicked(Vertex* vertex)
 {
+    if (vertex == startVertex) {
+        return;
+    }
     if (cursor == Cursor::EDGE && startVertex == nullptr) {
         startVertex = vertex;
         startVertex->changeColor(Qt::yellow);
+        startVertex->update();
     }
     else if (cursor == Cursor::EDGE && startVertex != nullptr && startVertex != vertex) {
-        bool ok;
-        int weight = QInputDialog::getInt(this, "Input Weight", "Input Weight", 0, 0, std::numeric_limits<int>::max(), 1, &ok);
-        if (ok) {
-            startVertex->changeColor(Qt::black);
-            startVertex->update();
-            graphicsScene->addItem(new Edge(startVertex, vertex, weight));
-            startVertex = nullptr;
-        }
+        // Basically tells the vertex to emit a signal that calls onPromptCreatePair, via mouse release.
+        vertex->setCandidatePairFound(true);
     }
+}
+
+void GraphArea::onPromptCreatePair(Vertex* pairVertex)
+{
+    startVertex->changeColor(Qt::black);
+    startVertex->update();
+    bool ok;
+    int weight = QInputDialog::getInt(this, "Input Weight", "Input Weight", 0, 0, std::numeric_limits<int>::max(), 1, &ok);
+    if (ok) {
+        graphicsScene->addItem(new Edge(startVertex, pairVertex, weight));
+    }
+    startVertex = nullptr;
 }

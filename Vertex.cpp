@@ -95,8 +95,8 @@ void Vertex::mousePressEvent(QGraphicsSceneMouseEvent *event)
 //        delete this;
 //        return;
 //    }
-    emit vertexClicked(this);
 
+    emit vertexClicked(this);
     update();
     QGraphicsItem::mousePressEvent(event);
 }
@@ -105,4 +105,8 @@ void Vertex::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     update();
     QGraphicsItem::mouseReleaseEvent(event);
+    if (candidatePairFound) {
+        emit promptCreatePair(this);
+    }
+    candidatePairFound = false;
 }

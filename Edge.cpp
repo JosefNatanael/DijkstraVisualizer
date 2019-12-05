@@ -71,6 +71,6 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
     painter->drawLine(line);
 
     // Draw weight text
-    QPointF pos = (sourcePoint + destinationPoint)/2;
+    QPointF pos = (sourcePoint + destinationPoint) / 2;
     painter->drawText(pos, QString::number(weight));
 }
