@@ -1,4 +1,10 @@
 #include "GraphArea.h"
+#include "Vertex.h"
+#include "Edge.h"
+
+#include <QDebug>
+#include "Utilities/WindowHelper.h"
+#include <QDesktopWidget>
 
 /**
  * @brief GraphArea constructor.
@@ -6,10 +12,33 @@
  */
 GraphArea::GraphArea(QWidget *parent)
     : QGraphicsView(parent)
+    , graphicsScene(new QGraphicsScene(this))
 {
-
+    setScene(graphicsScene);
+    scene()->installEventFilter(this);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
+    setFocusPolicy(Qt::NoFocus);
+    QRect screenRect = WindowHelper::screenFromWidget(qApp->desktop())->geometry();
+    setSceneRect(0, 0, screenRect.width(), screenRect.height());
 }
 
+/**
+ * @brief GraphArea destructor.
+ * @deletes all vertices.
+ */
+GraphArea::~GraphArea()
+{
+    for (Vertex* v : vertices) {
+        delete v;
+    }
+}
+
+/**
+ * @brief Sets cursor.
+ * @param cursor
+ */
 void GraphArea::setCursorMode(Cursor cursor)
 {
     this->cursor = cursor;
@@ -22,26 +51,43 @@ void GraphArea::setCursorMode(Cursor cursor)
  */
 void GraphArea::mousePressEvent(QMouseEvent* event)
 {
-    // Right click.
-    if (event->buttons() == Qt::RightButton) {
-        return;
-    }
+    // Pass to all else as well.
+    QGraphicsView::mousePressEvent(event);
+
     // Not left click, return.
     if (event->buttons() != Qt::LeftButton) {
         return;
     }
     switch (cursor) {
     case Cursor::POINTER:
+    {
         break;
+    }
     case Cursor::VERTEX:
-        emit drawVertexClicked(event->pos());
+    {
+        Vertex* vertex = new Vertex(this);
+        graphicsScene->addItem(vertex);
+        vertex->setPos(event->pos());
+        connect(vertex, &Vertex::vertexClicked, this, &GraphArea::onVertexClicked);
+        startVertex = nullptr;
         break;
-    case Cursor::EDGE:
-        emit drawEdgeClicked(event->pos());
-        break;
+    }
     case Cursor::START:
+        startVertex = nullptr;
         break;
     case Cursor::SHOWPATH:
+        startVertex = nullptr;
         break;
+    }
+}
+
+void GraphArea::onVertexClicked(Vertex* vertex)
+{
+    if (cursor == Cursor::EDGE && startVertex == nullptr) {
+        startVertex = vertex;
+    }
+    else if (cursor == Cursor::EDGE && startVertex != nullptr && startVertex != vertex) {
+        graphicsScene->addItem(new Edge(startVertex, vertex));
+        startVertex = nullptr;
     }
 }

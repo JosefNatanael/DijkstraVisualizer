@@ -14,8 +14,7 @@ public:
     explicit Visualizer(GraphArea* graphArea, QStatusBar *statusBar, QObject *parent = nullptr);
 
 private:
-    void addVertex(QPoint pos);
-    void addEdge(QPoint pos);
+
 
 private:
     GraphArea* graphArea;

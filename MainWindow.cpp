@@ -45,6 +45,9 @@ void MainWindow::on_actionExit_triggered()
  */
 void MainWindow::on_drawVertexButton_clicked()
 {
+    // Sets every other button to release
+    ui->drawEdgeButton->setChecked(false);
+
     if (ui->drawVertexButton->isChecked()) {
         ui->graphArea->setCursorMode(GraphArea::Cursor::VERTEX);
     }
@@ -58,8 +61,10 @@ void MainWindow::on_drawVertexButton_clicked()
  */
 void MainWindow::on_drawEdgeButton_clicked()
 {
+    // Sets every other button to release
+    ui->drawVertexButton->setChecked(false);
     if (ui->drawEdgeButton->isChecked()) {
-        ui->graphArea->setCursorMode(GraphArea::Cursor::VERTEX);
+        ui->graphArea->setCursorMode(GraphArea::Cursor::EDGE);
     }
     else {
         ui->graphArea->setCursorMode(GraphArea::Cursor::POINTER);

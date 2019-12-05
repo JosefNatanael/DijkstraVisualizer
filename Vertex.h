@@ -1,27 +1,55 @@
 #ifndef VERTEX_H
 #define VERTEX_H
 
-#include <QLabel>
 #include <QPainter>
+#include <QGraphicsScene>
+#include <QGraphicsSceneMouseEvent>
+#include <QGraphicsItem>
+#include <QGraphicsObject>
+#include <QStyleOption>
 
-class Vertex : public QLabel
+#include <list>
+#include "Edge.h"
+#include "GraphArea.h"
+
+QT_BEGIN_NAMESPACE
+class QGraphicsSceneMouseEvent;
+QT_END_NAMESPACE
+
+class Vertex : public QGraphicsObject
 {
     Q_OBJECT
 public:
-    explicit Vertex(int xPos, int yPos, QWidget *parent = nullptr);
+    explicit Vertex(GraphArea* graphArea);
 
-    void setPos(QPoint);
-    QPoint getPos() const;
+    void addEdge(Edge *edge);
+    std::list<Edge*> edges() const;
 
-signals:
+    enum { Type = UserType + 1 };
+    int type() const override { return Type; }
 
-protected slots:
-    void paintEvent(QPaintEvent *event) override;
+    bool advancePosition();
+
+    QRectF boundingRect() const override;
+    QPainterPath shape() const override;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+
+protected:
+    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
+
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 
 private:
     int dummy = 5;
     int xPos;
     int yPos;
+    std::list<Edge *> edgeList;
+    QPointF newPos;
+    GraphArea* graphArea;
+
+signals:
+    void vertexClicked(Vertex*);
 };
 
 #endif // VERTEX_H

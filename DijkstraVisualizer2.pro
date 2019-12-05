@@ -25,15 +25,19 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        Edge.cpp \
         GraphArea.cpp \
+        Utilities/WindowHelper.cpp \
         Vertex.cpp \
         Visualizer.cpp \
         main.cpp \
         MainWindow.cpp
 
 HEADERS += \
+        Edge.h \
         GraphArea.h \
         MainWindow.h \
+        Utilities/WindowHelper.h \
         Vertex.h \
         Visualizer.h
 
