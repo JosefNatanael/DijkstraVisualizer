@@ -26,12 +26,16 @@ CONFIG += c++11
 
 SOURCES += \
         GraphArea.cpp \
+        Vertex.cpp \
+        Visualizer.cpp \
         main.cpp \
         MainWindow.cpp
 
 HEADERS += \
         GraphArea.h \
-        MainWindow.h
+        MainWindow.h \
+        Vertex.h \
+        Visualizer.h
 
 FORMS += \
         MainWindow.ui
