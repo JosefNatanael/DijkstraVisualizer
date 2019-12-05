@@ -63,6 +63,7 @@ void MainWindow::on_drawEdgeButton_clicked()
 {
     // Sets every other button to release
     ui->drawVertexButton->setChecked(false);
+
     if (ui->drawEdgeButton->isChecked()) {
         ui->graphArea->setCursorMode(GraphArea::Cursor::EDGE);
     }

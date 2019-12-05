@@ -22,7 +22,7 @@ class Vertex : public QGraphicsObject
 public:
     explicit Vertex(GraphArea* graphArea);
 
-    void addEdge(Edge *edge);
+    void addEdge(Edge* edge);
     std::list<Edge*> edges() const;
 
     enum { Type = UserType + 1 };
@@ -32,7 +32,8 @@ public:
 
     QRectF boundingRect() const override;
     QPainterPath shape() const override;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
+    void changeColor(QColor color);
 
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
@@ -47,6 +48,7 @@ private:
     std::list<Edge *> edgeList;
     QPointF newPos;
     GraphArea* graphArea;
+    QColor vertexColor = Qt::black;
 
 signals:
     void vertexClicked(Vertex*);

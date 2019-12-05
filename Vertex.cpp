@@ -47,24 +47,29 @@ bool Vertex::advancePosition()
 QRectF Vertex::boundingRect() const
 {
     qreal adjust = 2;
-    return QRectF(-10 - adjust, -10 - adjust, 23 + adjust, 23 + adjust);
+    return QRectF(-20 - adjust, -20 - adjust, 40 + adjust, 40 + adjust);
 }
 
 QPainterPath Vertex::shape() const
 {
     QPainterPath path;
-    path.addEllipse(-10, -10, 20, 20);
+    path.addEllipse(-18, -18, 36, 36);
     return path;
 }
 
 void Vertex::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
-    painter->setBrush(Qt::black);
-    painter->drawEllipse(-14, -14, 28, 28);
+    painter->setBrush(vertexColor);
+    painter->drawEllipse(-18, -18, 36, 36);
     painter->setBrush(Qt::white);
     painter->setPen(QPen(Qt::black, 0));
-    painter->drawEllipse(-12, -12, 24, 24);
+    painter->drawEllipse(-16, -16, 32, 32);
     painter->drawText(-5, 5, QString::number(dummy));
+}
+
+void Vertex::changeColor(QColor color)
+{
+    vertexColor = color;
 }
 
 QVariant Vertex::itemChange(GraphicsItemChange change, const QVariant &value)

@@ -8,7 +8,7 @@ class Vertex;
 class Edge : public QGraphicsItem
 {
 public:
-    explicit Edge(Vertex* sourceVertex, Vertex* destVertex);
+    explicit Edge(Vertex* sourceVertex, Vertex* destVertex, int weight);
 
     Vertex* getSourceVertex() const;
     Vertex* getDestinationVertex() const;
@@ -25,6 +25,8 @@ protected:
 private:
     Vertex* source;
     Vertex* destination;
+
+    int weight = 0;
 
     QPointF sourcePoint;
     QPointF destinationPoint;

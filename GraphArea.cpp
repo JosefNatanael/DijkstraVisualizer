@@ -3,8 +3,11 @@
 #include "Edge.h"
 
 #include <QDebug>
+#include <QInputDialog>
 #include "Utilities/WindowHelper.h"
 #include <QDesktopWidget>
+
+#include <limits>
 
 /**
  * @brief GraphArea constructor.
@@ -85,9 +88,16 @@ void GraphArea::onVertexClicked(Vertex* vertex)
 {
     if (cursor == Cursor::EDGE && startVertex == nullptr) {
         startVertex = vertex;
+        startVertex->changeColor(Qt::yellow);
     }
     else if (cursor == Cursor::EDGE && startVertex != nullptr && startVertex != vertex) {
-        graphicsScene->addItem(new Edge(startVertex, vertex));
-        startVertex = nullptr;
+        bool ok;
+        int weight = QInputDialog::getInt(this, "Input Weight", "Input Weight", 0, 0, std::numeric_limits<int>::max(), 1, &ok);
+        if (ok) {
+            startVertex->changeColor(Qt::black);
+            startVertex->update();
+            graphicsScene->addItem(new Edge(startVertex, vertex, weight));
+            startVertex = nullptr;
+        }
     }
 }
