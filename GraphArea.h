@@ -5,7 +5,7 @@
 #include <QGraphicsScene>
 #include <QMouseEvent>
 
-#include <vector>
+#include <list>
 
 class Vertex;
 
@@ -18,13 +18,15 @@ public:
         VERTEX,
         EDGE,
         START,
-        SHOWPATH
+        SHOWPATH,
+        VISUALIZED
     };
 
 public:
     explicit GraphArea(QWidget *parent = nullptr);
     ~GraphArea();
     void setCursorMode(Cursor cursor);
+    Cursor getCursorMode() const;
 
 protected:
     void mousePressEvent(QMouseEvent* event);
@@ -36,7 +38,7 @@ private slots:
 private:
     QGraphicsScene* graphicsScene;
     Cursor cursor = Cursor::POINTER;
-    std::vector<Vertex*> vertices;
+    std::list<Vertex*> vertices;
     Vertex* startVertex = nullptr;
 
 signals:

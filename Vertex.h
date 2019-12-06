@@ -9,6 +9,7 @@
 #include <QStyleOption>
 
 #include <list>
+#include <algorithm>
 #include "Edge.h"
 #include "GraphArea.h"
 
@@ -23,6 +24,7 @@ public:
     explicit Vertex(GraphArea* graphArea);
 
     void addEdge(Edge* edge);
+    void removeEdge(Edge* edge);
     std::list<Edge*> edges() const;
 
     enum { Type = UserType + 1 };

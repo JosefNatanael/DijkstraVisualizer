@@ -47,6 +47,11 @@ void GraphArea::setCursorMode(Cursor cursor)
     this->cursor = cursor;
 }
 
+GraphArea::Cursor GraphArea::getCursorMode() const
+{
+    return this->cursor;
+}
+
 /**
  * @brief Detects mousePressEvent, specifically position.
  * @details Emits clicked position in the visualizer area.
@@ -55,6 +60,7 @@ void GraphArea::setCursorMode(Cursor cursor)
 void GraphArea::mousePressEvent(QMouseEvent* event)
 {
     // Pass to all else as well.
+    QGraphicsView::mousePressEvent(event);
     QGraphicsView::mousePressEvent(event);
 
     // Not left click, return.
@@ -68,12 +74,20 @@ void GraphArea::mousePressEvent(QMouseEvent* event)
     }
     case Cursor::VERTEX:
     {
+        // If there is a startVertex: set color to black.
+        if (startVertex != nullptr) {
+            startVertex->changeColor(Qt::black);
+            startVertex->update();
+        }
+        // Create new vertex, add to scene, setup connection, add to vertex list.
         Vertex* vertex = new Vertex(this);
         graphicsScene->addItem(vertex);
         vertex->setPos(event->pos());
         vertex->setPosData(event->pos());
         connect(vertex, &Vertex::vertexClicked, this, &GraphArea::onVertexClicked);
         connect(vertex, &Vertex::promptCreatePair, this, &GraphArea::onPromptCreatePair);
+
+        // Sets startVertex to nullptr in case user cancels edge operation.
         startVertex = nullptr;
         break;
     }
@@ -84,6 +98,8 @@ void GraphArea::mousePressEvent(QMouseEvent* event)
         break;
     case Cursor::SHOWPATH:
         startVertex = nullptr;
+        break;
+    case Cursor::VISUALIZED:
         break;
     }
 }
@@ -98,7 +114,7 @@ void GraphArea::onVertexClicked(Vertex* vertex)
         startVertex->changeColor(Qt::yellow);
         startVertex->update();
     }
-    else if (cursor == Cursor::EDGE && startVertex != nullptr && startVertex != vertex) {
+    else if (cursor == Cursor::EDGE && startVertex != nullptr) {
         // Basically tells the vertex to emit a signal that calls onPromptCreatePair, via mouse release.
         vertex->setCandidatePairFound(true);
     }
@@ -111,7 +127,7 @@ void GraphArea::onPromptCreatePair(Vertex* pairVertex)
     bool ok;
     int weight = QInputDialog::getInt(this, "Input Weight", "Input Weight", 0, 0, std::numeric_limits<int>::max(), 1, &ok);
     if (ok) {
-        graphicsScene->addItem(new Edge(startVertex, pairVertex, weight));
+        graphicsScene->addItem(new Edge(startVertex, pairVertex, this, weight));
     }
     startVertex = nullptr;
 }

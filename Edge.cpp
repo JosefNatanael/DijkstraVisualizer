@@ -1,12 +1,15 @@
 #include <qmath.h>
 #include <QPainter>
 
+#include <QDebug>
+
 #include "Edge.h"
 #include "Vertex.h"
 
-Edge::Edge(Vertex *sourceNode, Vertex *destNode, int weight) : weight(weight)
+Edge::Edge(Vertex *sourceNode, Vertex *destNode, GraphArea* graphArea, int weight)
+    : graphArea(graphArea)
+    , weight(weight)
 {
-    setAcceptedMouseButtons(nullptr);
     source = sourceNode;
     destination = destNode;
     source->addEdge(this);
@@ -22,6 +25,13 @@ Vertex* Edge::getSourceVertex() const
 Vertex* Edge::getDestinationVertex() const
 {
     return destination;
+}
+
+void Edge::removeFromIncidentVertices()
+{
+    source->removeEdge(this);
+    destination->removeEdge(this);
+    source = destination = nullptr;
 }
 
 void Edge::adjust()
@@ -48,13 +58,14 @@ QRectF Edge::boundingRect() const
     if (!source || !destination)
         return QRectF();
 
-    qreal penWidth = 1;
-    qreal extra = (penWidth + edgeLength) / 2.0;
+    qreal penWidth = 3;
+//    qreal extra = (penWidth + edgeLength) / 2.0;
+    qreal extra = penWidth;
 
     return QRectF(sourcePoint, QSizeF(destinationPoint.x() - sourcePoint.x(),
                                       destinationPoint.y() - sourcePoint.y()))
-        .normalized()
-        .adjusted(-extra, -extra, extra, extra);
+            .normalized()
+            .adjusted(-extra, -extra, extra, extra);
 }
 
 void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
@@ -67,10 +78,27 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
         return;
 
     // Draw the line itself
-    painter->setPen(QPen(Qt::black, 1, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+    painter->setPen(QPen(Qt::black, 3, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
     painter->drawLine(line);
 
     // Draw weight text
     QPointF pos = (sourcePoint + destinationPoint) / 2;
     painter->drawText(pos, QString::number(weight));
+}
+
+void Edge::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (event->buttons() == Qt::RightButton && graphArea->getCursorMode() == GraphArea::Cursor::POINTER) {
+        removeFromIncidentVertices();
+        delete this;
+        return;
+    }
+    update();
+    QGraphicsItem::mousePressEvent(event);
+}
+
+void Edge::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    update();
+    QGraphicsItem::mouseReleaseEvent(event);
 }

@@ -26,6 +26,15 @@ void Vertex::addEdge(Edge *edge)
     edge->adjust();
 }
 
+void Vertex::removeEdge(Edge *edge)
+{
+    std::list<Edge*>::iterator it;
+    it = std::find(edgeList.begin(), edgeList.end(), edge);
+    if (it != edgeList.end()) {
+        edgeList.erase(it);
+    }
+}
+
 /**
  * @brief Gets a list of edges.
  * @return STL list of Edge*
@@ -88,15 +97,17 @@ QVariant Vertex::itemChange(GraphicsItemChange change, const QVariant &value)
 
 void Vertex::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-//    if (event->buttons() == Qt::RightButton) {
-//        for (Edge* e : edgeList) {
-//            delete e;
-//        }
-//        delete this;
-//        return;
-//    }
-
-    emit vertexClicked(this);
+    if (event->buttons() == Qt::LeftButton) {
+        emit vertexClicked(this);
+    }
+    else if (event->buttons() == Qt::RightButton && graphArea->getCursorMode() == GraphArea::Cursor::POINTER) {
+        for (Edge* e : edgeList) {
+            e->removeFromIncidentVertices();
+            delete e;
+        }
+        delete this;
+        return;
+    }
     update();
     QGraphicsItem::mousePressEvent(event);
 }
