@@ -5,6 +5,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsObject>
 
+#include <limits>
 #include <list>
 #include <algorithm>
 #include <utility>
@@ -47,8 +48,12 @@ protected:
     void                            mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 
 private:
-    int                             distance = 0;
+    int                             uniqueID = -1;
+    int                             distance = std::numeric_limits<int>::max();
+    Vertex*                         previousVertex = nullptr;
     list<pair<Vertex*, Edge*>>      vertexEdgeList;
+    bool                            wasInPriorityQueue = false;
+
     QPointF                         newPos;
     GraphArea*                      graphArea;
     QColor                          vertexColor = Qt::black;

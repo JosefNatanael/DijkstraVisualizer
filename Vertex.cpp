@@ -7,7 +7,6 @@
  * @brief Vertex constructor.
  * @param graphArea Passed to QLabel() constructor.
  */
-
 Vertex::Vertex(GraphArea *graphArea)
     : graphArea(graphArea)
 {
@@ -81,7 +80,7 @@ void Vertex::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget 
     painter->setPen(QPen(Qt::black, 0));
     painter->drawEllipse(-16, -16, 32, 32);
     // TODO:
-//    painter->drawText(-5, 5, QString::number(distance));
+    painter->drawText(-5, 5, QString::number(distance));
 }
 
 void Vertex::changeColor(QColor color)

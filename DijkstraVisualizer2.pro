@@ -27,6 +27,7 @@ CONFIG += c++11
 SOURCES += \
         Edge.cpp \
         GraphArea.cpp \
+        Utilities/UnvisitedVertices.cpp \
         Utilities/WindowHelper.cpp \
         Vertex.cpp \
         main.cpp \
@@ -36,6 +37,7 @@ HEADERS += \
         Edge.h \
         GraphArea.h \
         MainWindow.h \
+        Utilities/UnvisitedVertices.h \
         Utilities/WindowHelper.h \
         Vertex.h
 
