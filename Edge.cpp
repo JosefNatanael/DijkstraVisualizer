@@ -13,7 +13,12 @@ Edge::Edge(Vertex *sourceNode, Vertex *destNode, GraphArea* graphArea, int weigh
     source = sourceNode;
     destination = destNode;
     source->addEdge(this);
+    source->addVertex(destination);
+    source->addPair(destination, this);
     destination->addEdge(this);
+    destination->addVertex(source);
+    destination->addPair(source, this);
+
     adjust();
 }
 
@@ -27,10 +32,14 @@ Vertex* Edge::getDestinationVertex() const
     return destination;
 }
 
-void Edge::removeFromIncidentVertices()
+void Edge::detachFromIncidentVertices()
 {
     source->removeEdge(this);
+    source->removeVertex(destination);
+    source->removePair(destination, this);
     destination->removeEdge(this);
+    destination->removeVertex(source);
+    destination->removePair(source, this);
     source = destination = nullptr;
 }
 
@@ -89,7 +98,7 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 void Edge::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->buttons() == Qt::RightButton && graphArea->getCursorMode() == GraphArea::Cursor::POINTER) {
-        removeFromIncidentVertices();
+        detachFromIncidentVertices();
         delete this;
         return;
     }

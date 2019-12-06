@@ -17,7 +17,7 @@ public:
 
     Vertex* getSourceVertex() const;
     Vertex* getDestinationVertex() const;
-    void removeFromIncidentVertices();
+    void detachFromIncidentVertices();
 
     void adjust();
 

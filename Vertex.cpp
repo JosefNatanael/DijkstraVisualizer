@@ -26,6 +26,10 @@ void Vertex::addEdge(Edge *edge)
     edge->adjust();
 }
 
+/**
+ * @brief Removes edge from edgeList
+ * @param edge Edge
+ */
 void Vertex::removeEdge(Edge *edge)
 {
     std::list<Edge*>::iterator it;
@@ -42,6 +46,70 @@ void Vertex::removeEdge(Edge *edge)
 std::list<Edge*> Vertex::edges() const
 {
     return edgeList;
+}
+
+/**
+ * @brief Adds vertex to verticesList.
+ * @param vertex
+ */
+void Vertex::addVertex(Vertex *vertex)
+{
+    vertexList.push_back(vertex);
+}
+
+/**
+ * @brief Remove vertex from vertexList
+ * @param vertex
+ */
+void Vertex::removeVertex(Vertex *vertex)
+{
+    std::list<Vertex*>::iterator it;
+    it = std::find(vertexList.begin(), vertexList.end(), vertex);
+    if (it != vertexList.end()) {
+        vertexList.erase(it);
+    }
+}
+
+/**
+ * @brief Gets a list of vertices.
+ * @return STL list of Vertex*
+ */
+std::list<Vertex *> Vertex::vertices()
+{
+    return vertexList;
+}
+
+/**
+ * @brief Make pair and add to vertexEdgeList.
+ * @param vertex
+ * @param edge
+ */
+void Vertex::addPair(Vertex *vertex, Edge *edge)
+{
+    vertexEdgeList.push_back(std::make_pair(vertex, edge));
+}
+
+/**
+ * @brief Removes pair from vertexEdgeList
+ * @param vertex
+ * @param edge
+ */
+void Vertex::removePair(Vertex *vertex, Edge *edge)
+{
+    list<pair<Vertex*, Edge*>>::iterator it;
+    it = std::find(vertexEdgeList.begin(), vertexEdgeList.end(), std::make_pair(vertex, edge));
+    if (it != vertexEdgeList.end()) {
+        vertexEdgeList.erase(it);
+    }
+}
+
+/**
+ * @brief Gets a list of pairs.
+ * @return STL list of Vertex* Edge* pairs
+ */
+list<pair<Vertex *, Edge *> > Vertex::pairs()
+{
+    return vertexEdgeList;
 }
 
 bool Vertex::advancePosition()
@@ -102,7 +170,7 @@ void Vertex::mousePressEvent(QGraphicsSceneMouseEvent *event)
     }
     else if (event->buttons() == Qt::RightButton && graphArea->getCursorMode() == GraphArea::Cursor::POINTER) {
         for (Edge* e : edgeList) {
-            e->removeFromIncidentVertices();
+            e->detachFromIncidentVertices();
             delete e;
         }
         delete this;
