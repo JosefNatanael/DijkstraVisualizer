@@ -27,8 +27,8 @@ public:
 public:
     explicit GraphArea(QWidget *parent = nullptr);
     ~GraphArea();
-    void setCursorMode(Cursor cursor);
-    Cursor getCursorMode() const;
+    void setCursorMode(Cursor cursor) { this->cursor = cursor; }
+    Cursor getCursorMode() const { return this->cursor; }
 
 protected:
     void mousePressEvent(QMouseEvent* event);
@@ -46,19 +46,5 @@ private:
 
 signals:
 };
-
-/**
- * @brief Sets cursor.
- * @param cursor
- */
-void GraphArea::setCursorMode(Cursor cursor)
-{
-    this->cursor = cursor;
-}
-
-GraphArea::Cursor GraphArea::getCursorMode() const
-{
-    return this->cursor;
-}
 
 #endif // GRAPHAREA_H

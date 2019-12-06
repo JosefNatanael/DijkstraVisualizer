@@ -33,9 +33,9 @@ GraphArea::GraphArea(QWidget *parent)
  */
 GraphArea::~GraphArea()
 {
-    for (Vertex* v : vertices) {
-        delete v;
-    }
+//    for (Vertex* v : vertices) {
+//        delete v;
+//    }
 }
 
 /**
@@ -71,7 +71,7 @@ void GraphArea::mousePressEvent(QMouseEvent* event)
         vertex->setPos(event->pos());
         connect(vertex, &Vertex::vertexClicked, this, &GraphArea::onVertexClicked);
         connect(vertex, &Vertex::promptCreatePair, this, &GraphArea::onPromptCreatePair);
-        vertices.push_back(vertex);
+//        vertices.push_back(vertex);
 
         // Sets startVertex to nullptr in case user cancels edge operation.
         startVertex = nullptr;

@@ -1,5 +1,6 @@
 #include "Vertex.h"
 
+#include <vector>
 #include <QDebug>
 
 /**
@@ -17,69 +18,6 @@ Vertex::Vertex(GraphArea *graphArea)
 }
 
 /**
- * @brief Adds edge to edgeList
- * @param edge Edge
- */
-void Vertex::addEdge(Edge *edge)
-{
-    edgeList.push_back(edge);
-    edge->adjust();
-}
-
-/**
- * @brief Removes edge from edgeList
- * @param edge Edge
- */
-void Vertex::removeEdge(Edge *edge)
-{
-    std::list<Edge*>::iterator it;
-    it = std::find(edgeList.begin(), edgeList.end(), edge);
-    if (it != edgeList.end()) {
-        edgeList.erase(it);
-    }
-}
-
-/**
- * @brief Gets a list of edges.
- * @return STL list of Edge*
- */
-std::list<Edge*> Vertex::edges() const
-{
-    return edgeList;
-}
-
-/**
- * @brief Adds vertex to verticesList.
- * @param vertex
- */
-void Vertex::addVertex(Vertex *vertex)
-{
-    vertexList.push_back(vertex);
-}
-
-/**
- * @brief Remove vertex from vertexList
- * @param vertex
- */
-void Vertex::removeVertex(Vertex *vertex)
-{
-    std::list<Vertex*>::iterator it;
-    it = std::find(vertexList.begin(), vertexList.end(), vertex);
-    if (it != vertexList.end()) {
-        vertexList.erase(it);
-    }
-}
-
-/**
- * @brief Gets a list of vertices.
- * @return STL list of Vertex*
- */
-std::list<Vertex *> Vertex::vertices()
-{
-    return vertexList;
-}
-
-/**
  * @brief Make pair and add to vertexEdgeList.
  * @param vertex
  * @param edge
@@ -87,6 +25,7 @@ std::list<Vertex *> Vertex::vertices()
 void Vertex::addPair(Vertex *vertex, Edge *edge)
 {
     vertexEdgeList.push_back(std::make_pair(vertex, edge));
+    edge->adjust();
 }
 
 /**
@@ -154,8 +93,8 @@ QVariant Vertex::itemChange(GraphicsItemChange change, const QVariant &value)
 {
     switch (change) {
     case ItemPositionHasChanged:
-        for (Edge *edge : qAsConst(edgeList))
-            edge->adjust();
+        for (pair<Vertex*, Edge*> e : qAsConst(vertexEdgeList))
+            e.second->adjust();
         break;
     default:
         break;
@@ -170,9 +109,15 @@ void Vertex::mousePressEvent(QGraphicsSceneMouseEvent *event)
         emit vertexClicked(this);
     }
     else if (event->buttons() == Qt::RightButton && graphArea->getCursorMode() == GraphArea::Cursor::POINTER) {
-        for (Edge* e : edgeList) {
-            e->detachFromIncidentVertices();
-            delete e;
+        std::vector<list<pair<Vertex*, Edge*>>::iterator> iteratorsToRemove;
+        for (list<pair<Vertex*, Edge*>>::iterator it = vertexEdgeList.begin(); it != vertexEdgeList.end(); ++it) {
+            iteratorsToRemove.push_back(it);
+        }
+        while (!iteratorsToRemove.empty()) {
+            Edge* temp = iteratorsToRemove[iteratorsToRemove.size() - 1]->second;
+            iteratorsToRemove[iteratorsToRemove.size() - 1]->second->detachFromIncidentVertices();
+            delete temp;
+            iteratorsToRemove.pop_back();
         }
         delete this;
         return;

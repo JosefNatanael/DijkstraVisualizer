@@ -25,12 +25,6 @@ class Vertex : public QGraphicsObject
 public:
     explicit Vertex(GraphArea* graphArea);
 
-    void                            addEdge(Edge* edge);
-    void                            removeEdge(Edge* edge);
-    std::list<Edge*>                edges() const;
-    void                            addVertex(Vertex* vertex);
-    void                            removeVertex(Vertex* vertex);
-    std::list<Vertex*>              vertices();
     void                            addPair(Vertex* vertex, Edge* edge);
     void                            removePair(Vertex* vertex, Edge* edge);
     list<pair<Vertex*, Edge*>>      pairs();
@@ -54,8 +48,6 @@ protected:
 
 private:
     int                             distance = 0;
-    list<Edge*>                     edgeList;
-    list<Vertex*>                   vertexList;
     list<pair<Vertex*, Edge*>>      vertexEdgeList;
     QPointF                         newPos;
     GraphArea*                      graphArea;
