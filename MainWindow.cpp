@@ -18,9 +18,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->drawVertexButton->setStyleSheet("QPushButton:checked{background-color:lightgreen;}");
     ui->drawEdgeButton->setCheckable(true);
     ui->drawEdgeButton->setStyleSheet("QPushButton:checked{background-color:lightgreen;}");
-
-    // Initialize new graph area.
-    visualizer = new Visualizer(ui->graphArea, ui->statusBar);
 }
 
 /**
@@ -29,7 +26,6 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete visualizer;
 }
 
 /**

@@ -29,7 +29,6 @@ SOURCES += \
         GraphArea.cpp \
         Utilities/WindowHelper.cpp \
         Vertex.cpp \
-        Visualizer.cpp \
         main.cpp \
         MainWindow.cpp
 
@@ -38,8 +37,7 @@ HEADERS += \
         GraphArea.h \
         MainWindow.h \
         Utilities/WindowHelper.h \
-        Vertex.h \
-        Visualizer.h
+        Vertex.h
 
 FORMS += \
         MainWindow.ui

@@ -39,20 +39,6 @@ GraphArea::~GraphArea()
 }
 
 /**
- * @brief Sets cursor.
- * @param cursor
- */
-void GraphArea::setCursorMode(Cursor cursor)
-{
-    this->cursor = cursor;
-}
-
-GraphArea::Cursor GraphArea::getCursorMode() const
-{
-    return this->cursor;
-}
-
-/**
  * @brief Detects mousePressEvent, specifically position.
  * @details Emits clicked position in the visualizer area.
  * @param event Mouse press event.
@@ -83,9 +69,9 @@ void GraphArea::mousePressEvent(QMouseEvent* event)
         Vertex* vertex = new Vertex(this);
         graphicsScene->addItem(vertex);
         vertex->setPos(event->pos());
-        vertex->setPosData(event->pos());
         connect(vertex, &Vertex::vertexClicked, this, &GraphArea::onVertexClicked);
         connect(vertex, &Vertex::promptCreatePair, this, &GraphArea::onPromptCreatePair);
+        vertices.push_back(vertex);
 
         // Sets startVertex to nullptr in case user cancels edge operation.
         startVertex = nullptr;

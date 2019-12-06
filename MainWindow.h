@@ -23,7 +23,6 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    Visualizer* visualizer = nullptr;
 };
 
 #endif // MAINWINDOW_H

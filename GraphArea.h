@@ -6,6 +6,8 @@
 #include <QMouseEvent>
 
 #include <list>
+#include <vector>
+#include <utility>
 
 class Vertex;
 
@@ -38,10 +40,25 @@ private slots:
 private:
     QGraphicsScene* graphicsScene;
     Cursor cursor = Cursor::POINTER;
-    std::list<Vertex*> vertices;
+    std::vector<Vertex*> vertices;
+    std::vector<std::list<Vertex*>> adjacencyList;
     Vertex* startVertex = nullptr;
 
 signals:
 };
+
+/**
+ * @brief Sets cursor.
+ * @param cursor
+ */
+void GraphArea::setCursorMode(Cursor cursor)
+{
+    this->cursor = cursor;
+}
+
+GraphArea::Cursor GraphArea::getCursorMode() const
+{
+    return this->cursor;
+}
 
 #endif // GRAPHAREA_H

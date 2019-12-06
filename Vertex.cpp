@@ -141,7 +141,8 @@ void Vertex::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget 
     painter->setBrush(Qt::white);
     painter->setPen(QPen(Qt::black, 0));
     painter->drawEllipse(-16, -16, 32, 32);
-    painter->drawText(-5, 5, QString::number(dummy));
+    // TODO:
+//    painter->drawText(-5, 5, QString::number(distance));
 }
 
 void Vertex::changeColor(QColor color)

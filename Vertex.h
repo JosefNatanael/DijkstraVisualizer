@@ -45,10 +45,6 @@ public:
     void                            paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
     void                            changeColor(QColor color);
 
-    // Accessors and Mutators
-    void                            setPosData(QPoint point) { xPos = point.x(); yPos = point.y(); }
-    QPoint                          getPosData() const { return QPoint(xPos, yPos); }
-
     void                            setCandidatePairFound(bool b) { candidatePairFound = b; }
 
 protected:
@@ -57,9 +53,7 @@ protected:
     void                            mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 
 private:
-    int                             dummy = 5;
-    int                             xPos;
-    int                             yPos;
+    int                             distance = 0;
     list<Edge*>                     edgeList;
     list<Vertex*>                   vertexList;
     list<pair<Vertex*, Edge*>>      vertexEdgeList;
