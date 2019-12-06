@@ -58,6 +58,7 @@ private:
 signals:
     void vertexClicked(Vertex*);        // Slot at GraphArea
     void promptCreatePair(Vertex*);     // Slot at GraphArea
+    void destroyVertex(Vertex*);        // Slot at GraphArea
 };
 
 #endif // VERTEX_H

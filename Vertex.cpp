@@ -119,6 +119,7 @@ void Vertex::mousePressEvent(QGraphicsSceneMouseEvent *event)
             delete temp;
             iteratorsToRemove.pop_back();
         }
+        emit destroyVertex(this);
         delete this;
         return;
     }

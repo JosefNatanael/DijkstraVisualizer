@@ -33,9 +33,9 @@ GraphArea::GraphArea(QWidget *parent)
  */
 GraphArea::~GraphArea()
 {
-//    for (Vertex* v : vertices) {
-//        delete v;
-//    }
+    for (Vertex* v : vertices) {
+        delete v;
+    }
 }
 
 /**
@@ -71,7 +71,8 @@ void GraphArea::mousePressEvent(QMouseEvent* event)
         vertex->setPos(event->pos());
         connect(vertex, &Vertex::vertexClicked, this, &GraphArea::onVertexClicked);
         connect(vertex, &Vertex::promptCreatePair, this, &GraphArea::onPromptCreatePair);
-//        vertices.push_back(vertex);
+        connect(vertex, &Vertex::destroyVertex, this, &GraphArea::onDestroyVertex);
+        vertices.push_back(vertex);
 
         // Sets startVertex to nullptr in case user cancels edge operation.
         startVertex = nullptr;
@@ -116,4 +117,15 @@ void GraphArea::onPromptCreatePair(Vertex* pairVertex)
         graphicsScene->addItem(new Edge(startVertex, pairVertex, this, weight));
     }
     startVertex = nullptr;
+}
+
+void GraphArea::onDestroyVertex(Vertex* vertex)
+{
+    std::vector<Vertex*>::iterator it = std::find(vertices.begin(), vertices.end(), vertex);
+    if (it != vertices.end()) {
+        vertices.erase(it);
+    }
+    else {
+        qDebug() << "not supposed to happen!";
+    }
 }

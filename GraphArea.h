@@ -36,6 +36,7 @@ protected:
 private slots:
     void onVertexClicked(Vertex*);
     void onPromptCreatePair(Vertex*);
+    void onDestroyVertex(Vertex*);
 
 private:
     QGraphicsScene* graphicsScene;
