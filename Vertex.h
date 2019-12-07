@@ -10,8 +10,8 @@
 #include <algorithm>
 #include <utility>
 
-#include "Edge.h"
-#include "GraphArea.h"
+class Edge;
+class GraphArea;
 
 QT_BEGIN_NAMESPACE
 class QGraphicsSceneMouseEvent;
@@ -28,7 +28,7 @@ public:
 
     void                            addPair(Vertex* vertex, Edge* edge);
     void                            removePair(Vertex* vertex, Edge* edge);
-    list<pair<Vertex*, Edge*>>      pairs();
+    list<pair<Vertex*, Edge*>>&     pairs();
 
     enum { Type = UserType + 1 };
     int                             type() const override { return Type; }
@@ -42,6 +42,15 @@ public:
 
     void                            setCandidatePairFound(bool b) { candidatePairFound = b; }
     int                             getDistance() const { return distance; }
+    void                            setDistance(int dist) { distance = dist; update(); }
+    int                             getID() const { return uniqueID; }
+    void                            setID(int id) { uniqueID = id; }
+    bool                            getWasInPriorityQueue() { return wasInPriorityQueue; }
+    void                            setWasInPriorityQueue(bool b) { wasInPriorityQueue = b; }
+    void                            setPreviousVertex(Vertex* v) { previousVertex = v; }
+
+
+//    void                            setSourceVertex(bool b) { isSourceVertex = b; }
 
 protected:
     QVariant                        itemChange(GraphicsItemChange change, const QVariant &value) override;
@@ -54,6 +63,7 @@ private:
     Vertex*                         previousVertex = nullptr;
     list<pair<Vertex*, Edge*>>      vertexEdgeList;
     bool                            wasInPriorityQueue = false;
+//    bool                            isSourceVertex = false;
 
     QPointF                         newPos;
     GraphArea*                      graphArea;

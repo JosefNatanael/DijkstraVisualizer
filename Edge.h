@@ -17,6 +17,7 @@ public:
 
     Vertex* getSourceVertex() const;
     Vertex* getDestinationVertex() const;
+    int getWeight() const { return weight; }
     void detachFromIncidentVertices();
 
     void adjust();

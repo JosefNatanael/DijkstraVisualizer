@@ -93,7 +93,14 @@ void MainWindow::on_startButton_clicked()
     }
 }
 
+void MainWindow::on_showPathButton_clicked()
+{
+
+}
+
 void MainWindow::onTurnOffStartButton()
 {
     ui->startButton->setChecked(false);
 }
+
+

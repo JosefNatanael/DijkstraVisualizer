@@ -1,17 +1,17 @@
 #ifndef PRIORITYQUEUE_H
 #define PRIORITYQUEUE_H
 
-template <typename Vertex>
+template <typename VertexPtr>
 class PriorityQueue
 {
 private:
     struct AVLnode
     {
-        Vertex* vertex;
+        VertexPtr vertex;
         int height;
         PriorityQueue left;
         PriorityQueue right;
-        AVLnode(Vertex* v) : vertex(v), height(0), left(), right() {}
+        AVLnode(VertexPtr v) : vertex(v), height(0), left(), right() {}
     };
 
     AVLnode* root = nullptr;
@@ -33,13 +33,13 @@ public:
     ~PriorityQueue() { delete root; }
 
     bool isEmpty() const { return root == nullptr; }
-    Vertex* findMin() const;
-    bool contains(Vertex* v) const;
+    VertexPtr findMin() const;
+    bool contains(VertexPtr v) const;
 
-    void insert(Vertex* v);
-    void remove(Vertex* v);
+    void insert(VertexPtr v);
+    void remove(VertexPtr v);
 };
 
-
+#include "PriorityQueue.tpp"
 
 #endif // PRIORITYQUEUE_H

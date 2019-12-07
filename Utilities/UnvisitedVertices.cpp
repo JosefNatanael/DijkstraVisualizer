@@ -1,38 +1,38 @@
 #include "UnvisitedVertices.h"
 
-UnvisitedVertices::UnvisitedVertices(unsigned int size)
+UnvisitedVertices::UnvisitedVertices(int size)
 {
-    array.resize(size);
-    for (unsigned int i = 0; i < size; ++i) {
-        array[i] = nullptr;
+    array.resize(static_cast<unsigned int>(size));
+    for (int i = 0; i < size; ++i) {
+        array[static_cast<unsigned int>(i)] = nullptr;
     }
 }
 
-unsigned int UnvisitedVertices::hashFunction(unsigned int key)
+int UnvisitedVertices::hashFunction(int key)
 {
-    return key % array.size();
+    return key % static_cast<int>(array.size());
 }
 
-void UnvisitedVertices::insertNode(unsigned int key, const Vertex * const value)
+void UnvisitedVertices::insertNode(int key, const Vertex * const value)
 {
     HashNode* temp = new HashNode(key, value);
-    unsigned int index = hashFunction(key);
+    int index = hashFunction(key);
     // Guaranteed no colission.
-    array[index] = temp;
+    array[static_cast<unsigned>(index)] = temp;
 }
 
-void UnvisitedVertices::deleteNode(unsigned int key)
+void UnvisitedVertices::removeNode(int key)
 {
-    unsigned int index = hashFunction(key);
+    int index = hashFunction(key);
     // Guaranteed able to delete
-    delete array[index];
-    array[index] = nullptr;
+    delete array[static_cast<unsigned int>(index)];
+    array[static_cast<unsigned int>(index)] = nullptr;
 }
 
-bool UnvisitedVertices::exists(unsigned int key)
+bool UnvisitedVertices::exists(int key)
 {
-    unsigned int index = hashFunction(key);
-    if (array[index] == nullptr) {
+    int index = hashFunction(key);
+    if (array[static_cast<unsigned int>(index)] == nullptr) {
         return false;
     }
     return true;

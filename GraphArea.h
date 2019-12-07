@@ -9,6 +9,9 @@
 #include <vector>
 #include <utility>
 
+#include "Utilities/PriorityQueue.h"
+#include "Utilities/UnvisitedVertices.h"
+
 class Vertex;
 
 class GraphArea : public QGraphicsView
@@ -40,12 +43,20 @@ private slots:
     void onDestroyVertex(Vertex*);
 
 private:
+    void startAlgorithm();
+
+private:
     QGraphicsScene* graphicsScene;
     Cursor cursor = Cursor::POINTER;
     std::vector<Vertex*> vertices;
-    std::vector<std::list<Vertex*>> adjacencyList;
+//    std::vector<std::list<Vertex*>> adjacencyList;
     Vertex* startVertex = nullptr;
-    Vertex* DijkstraSourceVertex = nullptr;
+
+    PriorityQueue<Vertex*>* minHeap = nullptr;
+    UnvisitedVertices* unvisitedVertices = nullptr;
+    Vertex* dijkstraSourceVertex = nullptr;
+    Vertex* dijkstraCurrentVertex = nullptr;
+    Vertex* dijkstraDestinationVertex = nullptr;
 
 signals:
     void turnOffStartButton();  // Slot in MainWindow

@@ -27,11 +27,11 @@ CONFIG += c++11
 SOURCES += \
         Edge.cpp \
         GraphArea.cpp \
-        Utilities/PriorityQueue.cpp \
         Utilities/UnvisitedVertices.cpp \
         Utilities/WindowHelper.cpp \
         Vertex.cpp \
         main.cpp \
+        Utilities/PriorityQueue.tpp \
         MainWindow.cpp
 
 HEADERS += \

@@ -2,20 +2,20 @@
 
 #include <algorithm>
 
-template <typename Vertex>
-int PriorityQueue<Vertex>::height() const
+template <typename VertexPtr>
+int PriorityQueue<VertexPtr>::height() const
 {
     return isEmpty() ? -1 : root->height;
 }
 
-template <typename Vertex>
-int PriorityQueue<Vertex>::bfactor() const
+template <typename VertexPtr>
+int PriorityQueue<VertexPtr>::bfactor() const
 {
     return isEmpty() ? 0 : rightSubtree().height() - leftSubtree().height();
 }
 
-template <typename Vertex>
-void PriorityQueue<Vertex>::fixHeight() const
+template <typename VertexPtr>
+void PriorityQueue<VertexPtr>::fixHeight() const
 {
     if (!isEmpty())
     {
@@ -25,8 +25,8 @@ void PriorityQueue<Vertex>::fixHeight() const
     }
 }
 
-template <typename Vertex>
-void PriorityQueue<Vertex>::rotateLeft()
+template <typename VertexPtr>
+void PriorityQueue<VertexPtr>::rotateLeft()
 {
     AVLnode* node = rightSubtree().root;
     rightSubtree() = node->left;
@@ -36,8 +36,8 @@ void PriorityQueue<Vertex>::rotateLeft()
     fixHeight();
 }
 
-template <typename Vertex>
-void PriorityQueue<Vertex>::rotateRight()
+template <typename VertexPtr>
+void PriorityQueue<VertexPtr>::rotateRight()
 {
     AVLnode* node = leftSubtree().root;
     leftSubtree() = node->right;
@@ -47,8 +47,8 @@ void PriorityQueue<Vertex>::rotateRight()
     fixHeight();
 }
 
-template <typename Vertex>
-void PriorityQueue<Vertex>::balance()
+template <typename VertexPtr>
+void PriorityQueue<VertexPtr>::balance()
 {
     if (isEmpty())
         return;
@@ -68,8 +68,8 @@ void PriorityQueue<Vertex>::balance()
     }
 }
 
-template <typename Vertex>
-Vertex* PriorityQueue<Vertex>::findMin() const
+template <typename VertexPtr>
+VertexPtr PriorityQueue<VertexPtr>::findMin() const
 {
     const PriorityQueue& leftAVL = leftSubtree();
     if (leftAVL.isEmpty())
@@ -77,8 +77,8 @@ Vertex* PriorityQueue<Vertex>::findMin() const
     return leftAVL.findMin();
 }
 
-template <typename Vertex>
-bool PriorityQueue<Vertex>::contains(Vertex* v) const
+template <typename VertexPtr>
+bool PriorityQueue<VertexPtr>::contains(VertexPtr v) const
 {
     if (isEmpty())
         return false;
@@ -90,8 +90,8 @@ bool PriorityQueue<Vertex>::contains(Vertex* v) const
         return rightSubtree().contains(v);
 }
 
-template <typename Vertex>
-void PriorityQueue<Vertex>::insert(Vertex *v)
+template <typename VertexPtr>
+void PriorityQueue<VertexPtr>::insert(VertexPtr v)
 {
     if (isEmpty())
         root = new AVLnode(v);
@@ -102,14 +102,18 @@ void PriorityQueue<Vertex>::insert(Vertex *v)
     balance();
 }
 
-template <typename Vertex>
-void PriorityQueue<Vertex>::remove(Vertex *v)
+template <typename VertexPtr>
+void PriorityQueue<VertexPtr>::remove(VertexPtr v)
 {
     if (isEmpty())
         return;
+    if (v != root->vertex && v->getDistance() == root->vertex->getDistance()) {
+        leftSubtree().remove(v);
+        rightSubtree().remove(v);
+    }
     if (v->getDistance() < root->vertex->getDistance())
         leftSubtree().remove(v);
-    else if (v->getDistance() >= root->vertex->getDistance())
+    else if (v->getDistance() > root->vertex->getDistance())
         rightSubtree().remove(v);
     else {
         PriorityQueue& leftAVL = leftSubtree();

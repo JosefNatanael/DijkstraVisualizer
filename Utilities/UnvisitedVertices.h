@@ -8,21 +8,19 @@ class UnvisitedVertices
 {
 public:
     struct HashNode {
-        HashNode(unsigned int key, const Vertex* const value) : key(key), value(value) {}
+        HashNode(int key, const Vertex* const value) : key(key), value(value) {}
         unsigned int key;
         const Vertex* const value;
     };
 
-    UnvisitedVertices(unsigned int size);
-    unsigned int hashFunction(unsigned int key);
-    void insertNode(unsigned int key, const Vertex* const value);
-    void deleteNode(unsigned int key);
-    bool exists(unsigned int key);
+    UnvisitedVertices(int size = 50);
+    int hashFunction(int key);
+    void insertNode(int key, const Vertex* const value);
+    void removeNode(int key);
+    bool exists(int key);
 
 private:
     std::vector<HashNode*> array;
-
-
 };
 
 #endif // UNVISITEDVERTICES_H

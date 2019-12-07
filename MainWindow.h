@@ -20,8 +20,9 @@ private slots:
     void on_drawVertexButton_clicked();
     void on_drawEdgeButton_clicked();
     void on_startButton_clicked();
-
     void onTurnOffStartButton();
+
+    void on_showPathButton_clicked();
 
 private:
     Ui::MainWindow *ui;

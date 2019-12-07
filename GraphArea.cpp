@@ -36,6 +36,8 @@ GraphArea::~GraphArea()
     for (Vertex* v : vertices) {
         delete v;
     }
+    delete unvisitedVertices;
+    delete minHeap;
 }
 
 /**
@@ -109,12 +111,14 @@ void GraphArea::onVertexClicked(Vertex* vertex)
     }
     else if (cursor == Cursor::START) {
         cursor = Cursor::STARTED;
-        DijkstraSourceVertex = vertex;
+        dijkstraSourceVertex = dijkstraCurrentVertex = vertex;
         vertex->changeColor(QColor(26, 83, 255));
+        vertex->setDistance(0);
         emit turnOffStartButton();
     }
     else if (cursor == Cursor::STARTED) {
         emit turnOffStartButton();
+        startAlgorithm();
     }
 }
 
@@ -134,9 +138,51 @@ void GraphArea::onDestroyVertex(Vertex* vertex)
 {
     std::vector<Vertex*>::iterator it = std::find(vertices.begin(), vertices.end(), vertex);
     if (it != vertices.end()) {
-        vertices.erase(it);
+        it = vertices.erase(it);
     }
     else {
         qDebug() << "not supposed to happen!";
     }
 }
+
+void GraphArea::startAlgorithm()
+{
+    minHeap = new PriorityQueue<Vertex*>;
+    // Create a set (hashtable) of all unvisited vertices.
+    unvisitedVertices = new UnvisitedVertices(static_cast<int>(vertices.size()));
+    // Mark all vertices as unvisited.
+    for (unsigned int i = 0; i < vertices.size(); ++i) {
+        vertices[i]->setID(static_cast<int>(i));
+        unvisitedVertices->insertNode(static_cast<int>(i), vertices[i]);
+    }
+    // Insert the source vertex into the priority queue.
+    minHeap->insert(dijkstraSourceVertex);
+    while (!minHeap->isEmpty()) {
+        Vertex* minDist = minHeap->findMin();
+        if (minDist != nullptr && unvisitedVertices->exists(minDist->getID())) {
+            dijkstraCurrentVertex = minDist;
+            unvisitedVertices->removeNode(minDist->getID());
+            minHeap->remove(minDist);
+        }
+        list<pair<Vertex*, Edge*>>& currentPairsList = dijkstraCurrentVertex->pairs();
+        for (list<pair<Vertex*, Edge*>>::iterator it = currentPairsList.begin(); it != currentPairsList.end(); ++it) {
+            if (!unvisitedVertices->exists(it->first->getID()))
+                continue;
+            int currentNeighborDistance = it->first->getDistance();
+            int potentialNewDist = it->second->getWeight() + dijkstraCurrentVertex->getDistance();
+            if (potentialNewDist < currentNeighborDistance) {
+                it->first->setDistance(potentialNewDist);
+                it->first->setPreviousVertex(dijkstraCurrentVertex);
+                if (!it->first->getWasInPriorityQueue()) {
+                    minHeap->insert(it->first);
+                    it->first->setWasInPriorityQueue(true);
+                }
+            }
+
+        }
+    }
+    cursor = Cursor::VISUALIZED;
+}
+
+
+

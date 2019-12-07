@@ -3,6 +3,8 @@
 #include <vector>
 #include <QDebug>
 
+#include "Edge.h"
+
 /**
  * @brief Vertex constructor.
  * @param graphArea Passed to QLabel() constructor.
@@ -37,7 +39,7 @@ void Vertex::removePair(Vertex *vertex, Edge *edge)
     list<pair<Vertex*, Edge*>>::iterator it;
     it = std::find(vertexEdgeList.begin(), vertexEdgeList.end(), std::make_pair(vertex, edge));
     if (it != vertexEdgeList.end()) {
-        vertexEdgeList.erase(it);
+        it = vertexEdgeList.erase(it);
     }
 }
 
@@ -45,7 +47,7 @@ void Vertex::removePair(Vertex *vertex, Edge *edge)
  * @brief Gets a list of pairs.
  * @return STL list of Vertex* Edge* pairs
  */
-list<pair<Vertex *, Edge *> > Vertex::pairs()
+list<pair<Vertex *, Edge *> >& Vertex::pairs()
 {
     return vertexEdgeList;
 }
@@ -80,7 +82,9 @@ void Vertex::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget 
     painter->setBrush(Qt::white);
     painter->drawEllipse(-16, -16, 32, 32);
     // TODO:
-    painter->drawText(-5, 5, QString::number(distance));
+    if (distance != std::numeric_limits<int>::max()) {
+        painter->drawText(-5, 5, QString::number(distance));
+    }
 }
 
 void Vertex::changeColor(QColor color)
