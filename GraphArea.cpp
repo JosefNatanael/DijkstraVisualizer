@@ -120,6 +120,9 @@ void GraphArea::onVertexClicked(Vertex* vertex)
         emit turnOffStartButton();
         startAlgorithm();
     }
+    else if (cursor == Cursor::VISUALIZED) {
+        emit turnOffStartButton();
+    }
 }
 
 void GraphArea::onPromptCreatePair(Vertex* pairVertex)
@@ -159,9 +162,12 @@ void GraphArea::startAlgorithm()
     minHeap->insert(dijkstraSourceVertex);
     while (!minHeap->isEmpty()) {
         Vertex* minDist = minHeap->findMin();
-        if (minDist != nullptr && unvisitedVertices->exists(minDist->getID())) {
-            dijkstraCurrentVertex = minDist;
-            unvisitedVertices->removeNode(minDist->getID());
+        if (minDist != nullptr) {
+            if (unvisitedVertices->exists(minDist->getID())) {
+                dijkstraCurrentVertex = minDist;
+                unvisitedVertices->removeNode(minDist->getID());
+            }
+            minDist->changeColor(Qt::gray);
             minHeap->remove(minDist);
         }
         list<pair<Vertex*, Edge*>>& currentPairsList = dijkstraCurrentVertex->pairs();
@@ -177,12 +183,10 @@ void GraphArea::startAlgorithm()
                     minHeap->insert(it->first);
                     it->first->setWasInPriorityQueue(true);
                 }
+
             }
 
         }
     }
     cursor = Cursor::VISUALIZED;
 }
-
-
-

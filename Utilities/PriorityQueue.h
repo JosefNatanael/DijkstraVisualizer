@@ -1,6 +1,8 @@
 #ifndef PRIORITYQUEUE_H
 #define PRIORITYQUEUE_H
 
+#include <QDebug>
+
 template <typename VertexPtr>
 class PriorityQueue
 {

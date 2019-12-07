@@ -51,6 +51,10 @@ void MainWindow::on_drawVertexButton_clicked()
     ui->startButton->setChecked(false);
     ui->drawEdgeButton->setChecked(false);
 
+    if (cursor == GraphArea::Cursor::VISUALIZED || cursor == GraphArea::Cursor::SHOWPATH) {
+        return;
+    }
+
 
     if (ui->drawVertexButton->isChecked() && cursor != GraphArea::Cursor::STARTED) {
         ui->graphArea->setCursorMode(GraphArea::Cursor::VERTEX);
@@ -70,6 +74,10 @@ void MainWindow::on_drawEdgeButton_clicked()
     ui->startButton->setChecked(false);
     ui->drawVertexButton->setChecked(false);
 
+    if (cursor == GraphArea::Cursor::VISUALIZED || cursor == GraphArea::Cursor::SHOWPATH) {
+        return;
+    }
+
 
     if (ui->drawEdgeButton->isChecked() && cursor != GraphArea::Cursor::STARTED) {
         ui->graphArea->setCursorMode(GraphArea::Cursor::EDGE);
@@ -81,9 +89,14 @@ void MainWindow::on_drawEdgeButton_clicked()
 
 void MainWindow::on_startButton_clicked()
 {
+    GraphArea::Cursor cursor = ui->graphArea->getCursorMode();
     // Sets every other button to release
     ui->drawEdgeButton->setChecked(false);
     ui->drawVertexButton->setChecked(false);
+
+    if (cursor == GraphArea::Cursor::VISUALIZED || cursor == GraphArea::Cursor::SHOWPATH) {
+        return;
+    }
 
     if (ui->startButton->isChecked() && ui->graphArea->getCursorMode() != GraphArea::Cursor::STARTED) {
         ui->graphArea->setCursorMode(GraphArea::Cursor::START);

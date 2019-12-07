@@ -84,6 +84,10 @@ bool PriorityQueue<VertexPtr>::contains(VertexPtr v) const
         return false;
     else if (v == root->vertex)
         return true;
+    else if (v != root->vertex && v->getDistance() == root->vertex->getDistance()) {
+        leftSubtree().contains(v);
+        rightSubtree().contains(v);
+    }
     else if (v->getDistance() < root->vertex->getDistance())
         return leftSubtree().contains(v);
     else
@@ -111,7 +115,7 @@ void PriorityQueue<VertexPtr>::remove(VertexPtr v)
         leftSubtree().remove(v);
         rightSubtree().remove(v);
     }
-    if (v->getDistance() < root->vertex->getDistance())
+    else if (v->getDistance() < root->vertex->getDistance())
         leftSubtree().remove(v);
     else if (v->getDistance() > root->vertex->getDistance())
         rightSubtree().remove(v);

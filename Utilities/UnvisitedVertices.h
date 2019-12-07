@@ -4,6 +4,8 @@
 #include "Vertex.h"
 #include <vector>
 
+#include <QDebug>
+
 class UnvisitedVertices
 {
 public:
