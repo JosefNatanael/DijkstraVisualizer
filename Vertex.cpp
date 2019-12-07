@@ -74,10 +74,10 @@ QPainterPath Vertex::shape() const
 
 void Vertex::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
+    painter->setPen(vertexColor);
     painter->setBrush(vertexColor);
     painter->drawEllipse(-18, -18, 36, 36);
     painter->setBrush(Qt::white);
-    painter->setPen(QPen(Qt::black, 0));
     painter->drawEllipse(-16, -16, 32, 32);
     // TODO:
     painter->drawText(-5, 5, QString::number(distance));

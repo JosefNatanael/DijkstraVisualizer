@@ -19,6 +19,9 @@ private slots:
     void on_actionExit_triggered();
     void on_drawVertexButton_clicked();
     void on_drawEdgeButton_clicked();
+    void on_startButton_clicked();
+
+    void onTurnOffStartButton();
 
 private:
     Ui::MainWindow *ui;

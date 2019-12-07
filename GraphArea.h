@@ -20,6 +20,7 @@ public:
         VERTEX,
         EDGE,
         START,
+        STARTED,
         SHOWPATH,
         VISUALIZED
     };
@@ -44,8 +45,10 @@ private:
     std::vector<Vertex*> vertices;
     std::vector<std::list<Vertex*>> adjacencyList;
     Vertex* startVertex = nullptr;
+    Vertex* DijkstraSourceVertex = nullptr;
 
 signals:
+    void turnOffStartButton();  // Slot in MainWindow
 };
 
 #endif // GRAPHAREA_H

@@ -18,6 +18,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->drawVertexButton->setStyleSheet("QPushButton:checked{background-color:lightgreen;}");
     ui->drawEdgeButton->setCheckable(true);
     ui->drawEdgeButton->setStyleSheet("QPushButton:checked{background-color:lightgreen;}");
+    ui->startButton->setCheckable(true);
+    ui->startButton->setStyleSheet("QPushButton:checked{background-color:lightgreen;}");
+
+    // Connections
+    connect(ui->graphArea, &GraphArea::turnOffStartButton, this, &MainWindow::onTurnOffStartButton);
 }
 
 /**
@@ -41,10 +46,13 @@ void MainWindow::on_actionExit_triggered()
  */
 void MainWindow::on_drawVertexButton_clicked()
 {
+    GraphArea::Cursor cursor = ui->graphArea->getCursorMode();
     // Sets every other button to release
+    ui->startButton->setChecked(false);
     ui->drawEdgeButton->setChecked(false);
 
-    if (ui->drawVertexButton->isChecked()) {
+
+    if (ui->drawVertexButton->isChecked() && cursor != GraphArea::Cursor::STARTED) {
         ui->graphArea->setCursorMode(GraphArea::Cursor::VERTEX);
     }
     else {
@@ -57,13 +65,35 @@ void MainWindow::on_drawVertexButton_clicked()
  */
 void MainWindow::on_drawEdgeButton_clicked()
 {
+    GraphArea::Cursor cursor = ui->graphArea->getCursorMode();
     // Sets every other button to release
+    ui->startButton->setChecked(false);
     ui->drawVertexButton->setChecked(false);
 
-    if (ui->drawEdgeButton->isChecked()) {
+
+    if (ui->drawEdgeButton->isChecked() && cursor != GraphArea::Cursor::STARTED) {
         ui->graphArea->setCursorMode(GraphArea::Cursor::EDGE);
     }
     else {
         ui->graphArea->setCursorMode(GraphArea::Cursor::POINTER);
     }
+}
+
+void MainWindow::on_startButton_clicked()
+{
+    // Sets every other button to release
+    ui->drawEdgeButton->setChecked(false);
+    ui->drawVertexButton->setChecked(false);
+
+    if (ui->startButton->isChecked() && ui->graphArea->getCursorMode() != GraphArea::Cursor::STARTED) {
+        ui->graphArea->setCursorMode(GraphArea::Cursor::START);
+    }
+    else if (ui->graphArea->getCursorMode() != GraphArea::Cursor::STARTED) {
+        ui->graphArea->setCursorMode(GraphArea::Cursor::POINTER);
+    }
+}
+
+void MainWindow::onTurnOffStartButton()
+{
+    ui->startButton->setChecked(false);
 }

@@ -83,6 +83,8 @@ void GraphArea::mousePressEvent(QMouseEvent* event)
     case Cursor::START:
         startVertex = nullptr;
         break;
+    case Cursor::STARTED:
+        break;
     case Cursor::SHOWPATH:
         startVertex = nullptr;
         break;
@@ -98,12 +100,21 @@ void GraphArea::onVertexClicked(Vertex* vertex)
     }
     if (cursor == Cursor::EDGE && startVertex == nullptr) {
         startVertex = vertex;
-        startVertex->changeColor(Qt::yellow);
+        startVertex->changeColor(QColor(200, 200, 0));
         startVertex->update();
     }
     else if (cursor == Cursor::EDGE && startVertex != nullptr) {
         // Basically tells the vertex to emit a signal that calls onPromptCreatePair, via mouse release.
         vertex->setCandidatePairFound(true);
+    }
+    else if (cursor == Cursor::START) {
+        cursor = Cursor::STARTED;
+        DijkstraSourceVertex = vertex;
+        vertex->changeColor(QColor(26, 83, 255));
+        emit turnOffStartButton();
+    }
+    else if (cursor == Cursor::STARTED) {
+        emit turnOffStartButton();
     }
 }
 

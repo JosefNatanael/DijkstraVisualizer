@@ -8,8 +8,7 @@ class UnvisitedVertices
 {
 public:
     struct HashNode {
-        HashNode(unsigned int key, const Vertex* const value)
-            : key(key), value(value) {}
+        HashNode(unsigned int key, const Vertex* const value) : key(key), value(value) {}
         unsigned int key;
         const Vertex* const value;
     };
