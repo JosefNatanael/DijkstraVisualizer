@@ -41,6 +41,7 @@ public:
     void                            changeColor(QColor color);
 
     void                            setCandidatePairFound(bool b) { candidatePairFound = b; }
+    int                             getDistance() const { return distance; }
 
 protected:
     QVariant                        itemChange(GraphicsItemChange change, const QVariant &value) override;
