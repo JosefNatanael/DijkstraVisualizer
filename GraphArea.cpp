@@ -81,6 +81,7 @@ void GraphArea::mousePressEvent(QMouseEvent* event)
 
         // Sets startVertex to nullptr in case user cancels edge operation.
         startVertex = nullptr;
+
         break;
     }
     case Cursor::EDGE:

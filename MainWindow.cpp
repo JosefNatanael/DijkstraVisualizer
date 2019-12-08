@@ -55,6 +55,12 @@ void MainWindow::on_drawVertexButton_clicked()
     ui->drawEdgeButton->setChecked(false);
     ui->showPathButton->setChecked(false);
 
+    // Turn off startVertex color
+    if (ui->graphArea->startVertex != nullptr) {
+        ui->graphArea->startVertex->changeColor(Qt::black);
+        ui->graphArea->startVertex->update();
+    }
+
     if (cursor == GraphArea::Cursor::VISUALIZED || cursor == GraphArea::Cursor::SHOWPATH) {
         return;
     }
@@ -79,6 +85,12 @@ void MainWindow::on_drawEdgeButton_clicked()
     ui->drawVertexButton->setChecked(false);
     ui->showPathButton->setChecked(false);
 
+    // Turn off startVertex color
+    if (ui->graphArea->startVertex != nullptr) {
+        ui->graphArea->startVertex->changeColor(Qt::black);
+        ui->graphArea->startVertex->update();
+    }
+
     if (cursor == GraphArea::Cursor::VISUALIZED || cursor == GraphArea::Cursor::SHOWPATH) {
         return;
     }
@@ -100,6 +112,12 @@ void MainWindow::on_startButton_clicked()
     ui->drawVertexButton->setChecked(false);
     ui->showPathButton->setChecked(false);
 
+    // Turn off startVertex color
+    if (ui->graphArea->startVertex != nullptr) {
+        ui->graphArea->startVertex->changeColor(Qt::black);
+        ui->graphArea->startVertex->update();
+    }
+
     if (cursor == GraphArea::Cursor::VISUALIZED || cursor == GraphArea::Cursor::SHOWPATH) {
         return;
     }
@@ -119,6 +137,12 @@ void MainWindow::on_showPathButton_clicked()
     ui->startButton->setChecked(false);
     ui->drawEdgeButton->setChecked(false);
     ui->drawVertexButton->setChecked(false);
+
+    // Turn off startVertex color
+    if (ui->graphArea->startVertex != nullptr) {
+        ui->graphArea->startVertex->changeColor(Qt::black);
+        ui->graphArea->startVertex->update();
+    }
 
     ui->graphArea->setCursorMode(GraphArea::Cursor::SHOWPATH);
 

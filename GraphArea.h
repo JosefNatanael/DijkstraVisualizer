@@ -17,6 +17,7 @@ class Vertex;
 class GraphArea : public QGraphicsView
 {
     Q_OBJECT
+    friend class MainWindow;
 public:
     enum class Cursor {
         POINTER,
