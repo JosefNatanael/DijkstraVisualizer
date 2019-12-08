@@ -44,12 +44,13 @@ private slots:
 
 private:
     void startAlgorithm();
+    void clearColoredEdges();
 
 private:
     QGraphicsScene* graphicsScene;
     Cursor cursor = Cursor::POINTER;
-    std::vector<Vertex*> vertices;
-//    std::vector<std::list<Vertex*>> adjacencyList;
+    std::vector<Vertex*> adjacencyList;
+    std::vector<Edge*> coloredEdges;
     Vertex* startVertex = nullptr;
 
     PriorityQueue<Vertex*>* minHeap = nullptr;
@@ -58,8 +59,11 @@ private:
     Vertex* dijkstraCurrentVertex = nullptr;
     Vertex* dijkstraDestinationVertex = nullptr;
 
+    bool isVisualized = false;
+
 signals:
-    void turnOffStartButton();  // Slot in MainWindow
+    void turnOffStartButton();      // Slot in MainWindow
+    void turnOffShowPathButton();   // Slot in MainWindow
 };
 
 #endif // GRAPHAREA_H

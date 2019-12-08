@@ -33,7 +33,7 @@ GraphArea::GraphArea(QWidget *parent)
  */
 GraphArea::~GraphArea()
 {
-    for (Vertex* v : vertices) {
+    for (Vertex* v : adjacencyList) {
         delete v;
     }
     delete unvisitedVertices;
@@ -50,6 +50,9 @@ void GraphArea::mousePressEvent(QMouseEvent* event)
     // Pass to all else as well.
     QGraphicsView::mousePressEvent(event);
     QGraphicsView::mousePressEvent(event);
+
+    // DEBUGGING PURPOSES
+    qDebug() << static_cast<int>(cursor);
 
     // Not left click, return.
     if (event->buttons() != Qt::LeftButton) {
@@ -74,7 +77,7 @@ void GraphArea::mousePressEvent(QMouseEvent* event)
         connect(vertex, &Vertex::vertexClicked, this, &GraphArea::onVertexClicked);
         connect(vertex, &Vertex::promptCreatePair, this, &GraphArea::onPromptCreatePair);
         connect(vertex, &Vertex::destroyVertex, this, &GraphArea::onDestroyVertex);
-        vertices.push_back(vertex);
+        adjacencyList.push_back(vertex);
 
         // Sets startVertex to nullptr in case user cancels edge operation.
         startVertex = nullptr;
@@ -88,8 +91,10 @@ void GraphArea::mousePressEvent(QMouseEvent* event)
     case Cursor::STARTED:
         break;
     case Cursor::SHOWPATH:
+    {
         startVertex = nullptr;
         break;
+    }
     case Cursor::VISUALIZED:
         break;
     }
@@ -123,6 +128,31 @@ void GraphArea::onVertexClicked(Vertex* vertex)
     else if (cursor == Cursor::VISUALIZED) {
         emit turnOffStartButton();
     }
+    else if (cursor == Cursor::SHOWPATH) {
+        if (!isVisualized) {
+            emit turnOffShowPathButton();
+            return;
+        }
+        // Show path algorithm
+        clearColoredEdges();
+        Vertex* before = vertex->getPreviousVertex();
+        Vertex* current = vertex;
+        while (before != nullptr) {
+            list<pair<Vertex*, Edge*>>& currentList = current->pairs();
+            list<pair<Vertex*, Edge*>>::iterator it;
+            it = std::find_if(currentList.begin(), currentList.end(), [before](pair<Vertex*, Edge*> p){ return p.first == before; });
+            if (it != currentList.end()) {
+                it->second->setLineColor(QColor(26, 83, 255));
+                it->second->update();
+                coloredEdges.push_back(it->second);
+            }
+            else {
+                qDebug() << "This is impossible!!";
+            }
+            current = current->getPreviousVertex();
+            before = before->getPreviousVertex();
+        }
+    }
 }
 
 void GraphArea::onPromptCreatePair(Vertex* pairVertex)
@@ -139,9 +169,9 @@ void GraphArea::onPromptCreatePair(Vertex* pairVertex)
 
 void GraphArea::onDestroyVertex(Vertex* vertex)
 {
-    std::vector<Vertex*>::iterator it = std::find(vertices.begin(), vertices.end(), vertex);
-    if (it != vertices.end()) {
-        it = vertices.erase(it);
+    std::vector<Vertex*>::iterator it = std::find(adjacencyList.begin(), adjacencyList.end(), vertex);
+    if (it != adjacencyList.end()) {
+        it = adjacencyList.erase(it);
     }
     else {
         qDebug() << "not supposed to happen!";
@@ -152,11 +182,11 @@ void GraphArea::startAlgorithm()
 {
     minHeap = new PriorityQueue<Vertex*>;
     // Create a set (hashtable) of all unvisited vertices.
-    unvisitedVertices = new UnvisitedVertices(static_cast<int>(vertices.size()));
+    unvisitedVertices = new UnvisitedVertices(static_cast<int>(adjacencyList.size()));
     // Mark all vertices as unvisited.
-    for (unsigned int i = 0; i < vertices.size(); ++i) {
-        vertices[i]->setID(static_cast<int>(i));
-        unvisitedVertices->insertNode(static_cast<int>(i), vertices[i]);
+    for (unsigned int i = 0; i < adjacencyList.size(); ++i) {
+        adjacencyList[i]->setID(static_cast<int>(i));
+        unvisitedVertices->insertNode(static_cast<int>(i), adjacencyList[i]);
     }
     // Insert the source vertex into the priority queue.
     minHeap->insert(dijkstraSourceVertex);
@@ -189,4 +219,14 @@ void GraphArea::startAlgorithm()
         }
     }
     cursor = Cursor::VISUALIZED;
+    isVisualized = true;
+}
+
+void GraphArea::clearColoredEdges()
+{
+    for (Edge* e : coloredEdges) {
+        e->setLineColor(Qt::black);
+        e->update();
+    }
+    coloredEdges.clear();
 }

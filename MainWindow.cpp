@@ -20,9 +20,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->drawEdgeButton->setStyleSheet("QPushButton:checked{background-color:lightgreen;}");
     ui->startButton->setCheckable(true);
     ui->startButton->setStyleSheet("QPushButton:checked{background-color:lightgreen;}");
+    ui->showPathButton->setCheckable(true);
+    ui->showPathButton->setStyleSheet("QPushButton:checked{background-color:lightgreen;}");
 
     // Connections
     connect(ui->graphArea, &GraphArea::turnOffStartButton, this, &MainWindow::onTurnOffStartButton);
+    connect(ui->graphArea, &GraphArea::turnOffShowPathButton, this, &MainWindow::onTurnOffShowPathButton);
 }
 
 /**
@@ -50,6 +53,7 @@ void MainWindow::on_drawVertexButton_clicked()
     // Sets every other button to release
     ui->startButton->setChecked(false);
     ui->drawEdgeButton->setChecked(false);
+    ui->showPathButton->setChecked(false);
 
     if (cursor == GraphArea::Cursor::VISUALIZED || cursor == GraphArea::Cursor::SHOWPATH) {
         return;
@@ -73,6 +77,7 @@ void MainWindow::on_drawEdgeButton_clicked()
     // Sets every other button to release
     ui->startButton->setChecked(false);
     ui->drawVertexButton->setChecked(false);
+    ui->showPathButton->setChecked(false);
 
     if (cursor == GraphArea::Cursor::VISUALIZED || cursor == GraphArea::Cursor::SHOWPATH) {
         return;
@@ -93,6 +98,7 @@ void MainWindow::on_startButton_clicked()
     // Sets every other button to release
     ui->drawEdgeButton->setChecked(false);
     ui->drawVertexButton->setChecked(false);
+    ui->showPathButton->setChecked(false);
 
     if (cursor == GraphArea::Cursor::VISUALIZED || cursor == GraphArea::Cursor::SHOWPATH) {
         return;
@@ -108,6 +114,13 @@ void MainWindow::on_startButton_clicked()
 
 void MainWindow::on_showPathButton_clicked()
 {
+//    GraphArea::Cursor cursor = ui->graphArea->getCursorMode();
+    // Sets every other button to release
+    ui->startButton->setChecked(false);
+    ui->drawEdgeButton->setChecked(false);
+    ui->drawVertexButton->setChecked(false);
+
+    ui->graphArea->setCursorMode(GraphArea::Cursor::SHOWPATH);
 
 }
 
@@ -116,4 +129,7 @@ void MainWindow::onTurnOffStartButton()
     ui->startButton->setChecked(false);
 }
 
-
+void MainWindow::onTurnOffShowPathButton()
+{
+    ui->showPathButton->setChecked(false);
+}

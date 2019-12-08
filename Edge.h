@@ -18,6 +18,7 @@ public:
     Vertex* getSourceVertex() const;
     Vertex* getDestinationVertex() const;
     int getWeight() const { return weight; }
+    void setLineColor(QColor c) { lineColor = c; }
     void detachFromIncidentVertices();
 
     void adjust();
@@ -39,6 +40,7 @@ private:
 
     QPointF sourcePoint;
     QPointF destinationPoint;
+    QColor lineColor = Qt::black;
 };
 
 #endif // EDGE_H

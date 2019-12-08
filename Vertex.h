@@ -48,6 +48,7 @@ public:
     bool                            getWasInPriorityQueue() { return wasInPriorityQueue; }
     void                            setWasInPriorityQueue(bool b) { wasInPriorityQueue = b; }
     void                            setPreviousVertex(Vertex* v) { previousVertex = v; }
+    Vertex*                         getPreviousVertex() const { return previousVertex; }
 
 
 //    void                            setSourceVertex(bool b) { isSourceVertex = b; }
@@ -63,7 +64,6 @@ private:
     Vertex*                         previousVertex = nullptr;
     list<pair<Vertex*, Edge*>>      vertexEdgeList;
     bool                            wasInPriorityQueue = false;
-//    bool                            isSourceVertex = false;
 
     QPointF                         newPos;
     GraphArea*                      graphArea;
