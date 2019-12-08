@@ -29,13 +29,10 @@ GraphArea::GraphArea(QWidget *parent)
 
 /**
  * @brief GraphArea destructor.
- * @deletes all vertices.
  */
 GraphArea::~GraphArea()
 {
-    for (Vertex* v : adjacencyList) {
-        delete v;
-    }
+    removeAndDeallocVertexEdge();
     delete unvisitedVertices;
     delete minHeap;
 }
@@ -287,4 +284,28 @@ void GraphArea::clearAlgorithm()
         v->update();
     }
     update();
+}
+
+void GraphArea::newSlate()
+{
+    clearAlgorithm();
+    removeAndDeallocVertexEdge();
+    adjacencyList.clear();
+    update();
+}
+
+void GraphArea::removeAndDeallocVertexEdge()
+{
+    std::vector<Edge*> edgesToRemove;
+    for (Vertex* v : adjacencyList) {
+        list<pair<Vertex*, Edge*>>& currentPairsList = v->pairs();
+        for (list<pair<Vertex*, Edge*>>::iterator it = currentPairsList.begin(); it != currentPairsList.end(); ++it) {
+            edgesToRemove.push_back(it->second);
+            it->second->detachFromIncidentVertices();
+        }
+        delete v;
+    }
+    for (Edge* e : edgesToRemove) {
+        delete e;
+    }
 }

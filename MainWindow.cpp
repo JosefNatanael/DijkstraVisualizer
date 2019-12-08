@@ -191,3 +191,17 @@ void MainWindow::on_clearButton_clicked()
     // Clear algorithm
     ui->graphArea->clearAlgorithm();
 }
+
+void MainWindow::on_actionNew_triggered()
+{
+    // Sets every other button to release
+    ui->startButton->setChecked(false);
+    ui->drawEdgeButton->setChecked(false);
+    ui->drawVertexButton->setChecked(false);
+    ui->showPathButton->setChecked(false);
+
+    // Sets cursor to pointer
+    ui->graphArea->setCursorMode(GraphArea::Cursor::POINTER);
+
+    ui->graphArea->newSlate();
+}

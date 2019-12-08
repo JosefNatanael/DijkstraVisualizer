@@ -22,6 +22,7 @@ private slots:
     void on_startButton_clicked();
     void on_showPathButton_clicked();
     void on_clearButton_clicked();
+    void on_actionNew_triggered();
 
     void onTurnOffStartButton();
     void onTurnOffShowPathButton();

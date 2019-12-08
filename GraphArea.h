@@ -34,7 +34,6 @@ public:
     ~GraphArea();
     void setCursorMode(Cursor cursor) { this->cursor = cursor; }
     Cursor getCursorMode() const { return this->cursor; }
-    void clearAlgorithm();
 
 protected:
     void mousePressEvent(QMouseEvent* event);
@@ -47,6 +46,9 @@ private slots:
 private:
     void startAlgorithm();
     void clearColoredEdges();
+    void clearAlgorithm();
+    void newSlate();
+    void removeAndDeallocVertexEdge();
 
 private:
     QGraphicsScene* graphicsScene;

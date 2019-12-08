@@ -104,15 +104,15 @@
     <property name="title">
      <string>File</string>
     </property>
-    <addaction name="actionClear_Screen"/>
+    <addaction name="actionNew"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
-  <action name="actionClear_Screen">
+  <action name="actionNew">
    <property name="text">
-    <string>Clear Screen</string>
+    <string>New</string>
    </property>
   </action>
   <action name="actionExit">
