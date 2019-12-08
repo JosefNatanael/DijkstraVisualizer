@@ -111,7 +111,9 @@ void Vertex::mousePressEvent(QGraphicsSceneMouseEvent *event)
     if (event->buttons() == Qt::LeftButton) {
         emit vertexClicked(this);
     }
-    else if (event->buttons() == Qt::RightButton && graphArea->getCursorMode() == GraphArea::Cursor::POINTER) {
+    else if ((event->buttons() == Qt::RightButton && graphArea->getCursorMode() == GraphArea::Cursor::POINTER)
+             || graphArea->getCursorMode() == GraphArea::Cursor::START)
+    {
         std::vector<list<pair<Vertex*, Edge*>>::iterator> iteratorsToRemove;
         for (list<pair<Vertex*, Edge*>>::iterator it = vertexEdgeList.begin(); it != vertexEdgeList.end(); ++it) {
             iteratorsToRemove.push_back(it);

@@ -50,7 +50,8 @@ void MainWindow::on_actionExit_triggered()
 void MainWindow::on_drawVertexButton_clicked()
 {
     GraphArea::Cursor cursor = ui->graphArea->getCursorMode();
-    // Sets every other button to release
+    // Sets every other button to release and clear any colored edges
+    ui->graphArea->clearColoredEdges();
     ui->startButton->setChecked(false);
     ui->drawEdgeButton->setChecked(false);
     ui->showPathButton->setChecked(false);
@@ -61,7 +62,10 @@ void MainWindow::on_drawVertexButton_clicked()
         ui->graphArea->startVertex->update();
     }
 
-    if (cursor == GraphArea::Cursor::VISUALIZED || cursor == GraphArea::Cursor::SHOWPATH) {
+    if (ui->graphArea->isVisualized) {
+        if (cursor == GraphArea::Cursor::SHOWPATH) {
+            ui->graphArea->setCursorMode(GraphArea::Cursor::VISUALIZED);
+        }
         return;
     }
 
@@ -80,7 +84,8 @@ void MainWindow::on_drawVertexButton_clicked()
 void MainWindow::on_drawEdgeButton_clicked()
 {
     GraphArea::Cursor cursor = ui->graphArea->getCursorMode();
-    // Sets every other button to release
+    // Sets every other button to release and clear any colored edges
+    ui->graphArea->clearColoredEdges();
     ui->startButton->setChecked(false);
     ui->drawVertexButton->setChecked(false);
     ui->showPathButton->setChecked(false);
@@ -91,7 +96,10 @@ void MainWindow::on_drawEdgeButton_clicked()
         ui->graphArea->startVertex->update();
     }
 
-    if (cursor == GraphArea::Cursor::VISUALIZED || cursor == GraphArea::Cursor::SHOWPATH) {
+    if (ui->graphArea->isVisualized) {
+        if (cursor == GraphArea::Cursor::SHOWPATH) {
+            ui->graphArea->setCursorMode(GraphArea::Cursor::VISUALIZED);
+        }
         return;
     }
 
@@ -107,7 +115,8 @@ void MainWindow::on_drawEdgeButton_clicked()
 void MainWindow::on_startButton_clicked()
 {
     GraphArea::Cursor cursor = ui->graphArea->getCursorMode();
-    // Sets every other button to release
+    // Sets every other button to release and clear any colored edges
+    ui->graphArea->clearColoredEdges();
     ui->drawEdgeButton->setChecked(false);
     ui->drawVertexButton->setChecked(false);
     ui->showPathButton->setChecked(false);
@@ -118,7 +127,10 @@ void MainWindow::on_startButton_clicked()
         ui->graphArea->startVertex->update();
     }
 
-    if (cursor == GraphArea::Cursor::VISUALIZED || cursor == GraphArea::Cursor::SHOWPATH) {
+    if (ui->graphArea->isVisualized) {
+        if (cursor == GraphArea::Cursor::SHOWPATH) {
+            ui->graphArea->setCursorMode(GraphArea::Cursor::VISUALIZED);
+        }
         return;
     }
 
@@ -132,7 +144,7 @@ void MainWindow::on_startButton_clicked()
 
 void MainWindow::on_showPathButton_clicked()
 {
-//    GraphArea::Cursor cursor = ui->graphArea->getCursorMode();
+    GraphArea::Cursor cursor = ui->graphArea->getCursorMode();
     // Sets every other button to release
     ui->startButton->setChecked(false);
     ui->drawEdgeButton->setChecked(false);
@@ -142,6 +154,13 @@ void MainWindow::on_showPathButton_clicked()
     if (ui->graphArea->startVertex != nullptr) {
         ui->graphArea->startVertex->changeColor(Qt::black);
         ui->graphArea->startVertex->update();
+    }
+
+    // Visualized and show path, then turn off, return
+    if (ui->graphArea->isVisualized && cursor == GraphArea::Cursor::SHOWPATH) {
+        ui->graphArea->setCursorMode(GraphArea::Cursor::SHOWPATH);
+        ui->graphArea->clearColoredEdges();
+        return;
     }
 
     ui->graphArea->setCursorMode(GraphArea::Cursor::SHOWPATH);

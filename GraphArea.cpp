@@ -40,6 +40,36 @@ GraphArea::~GraphArea()
     delete minHeap;
 }
 
+///////////////////// DEBUGGING HELPER /////////////////////
+///
+#include "QRandomGenerator"
+void printEnum(int en) {
+    switch (en) {
+    case 0:
+        qDebug() << "pointer" << QRandomGenerator::global()->generate();
+        break;
+    case 1:
+        qDebug() << "vertex" << QRandomGenerator::global()->generate();
+        break;
+    case 2:
+        qDebug() << "edge" << QRandomGenerator::global()->generate();
+        break;
+    case 3:
+        qDebug() << "start" << QRandomGenerator::global()->generate();
+        break;
+    case 4:
+        qDebug() << "started" << QRandomGenerator::global()->generate();
+        break;
+    case 5:
+        qDebug() << "showpath" << QRandomGenerator::global()->generate();
+        break;
+    case 6:
+        qDebug() << "visualized" << QRandomGenerator::global()->generate();
+        break;
+    }
+}
+///////////////////// DEBUGGING HELPER /////////////////////
+
 /**
  * @brief Detects mousePressEvent, specifically position.
  * @details Emits clicked position in the visualizer area.
@@ -52,7 +82,7 @@ void GraphArea::mousePressEvent(QMouseEvent* event)
     QGraphicsView::mousePressEvent(event);
 
     // DEBUGGING PURPOSES
-    qDebug() << static_cast<int>(cursor);
+    printEnum(static_cast<int>(cursor));
 
     // Not left click, return.
     if (event->buttons() != Qt::LeftButton) {
@@ -92,10 +122,8 @@ void GraphArea::mousePressEvent(QMouseEvent* event)
     case Cursor::STARTED:
         break;
     case Cursor::SHOWPATH:
-    {
         startVertex = nullptr;
         break;
-    }
     case Cursor::VISUALIZED:
         break;
     }
