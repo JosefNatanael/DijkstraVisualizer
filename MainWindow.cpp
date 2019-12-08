@@ -176,3 +176,18 @@ void MainWindow::onTurnOffShowPathButton()
 {
     ui->showPathButton->setChecked(false);
 }
+
+void MainWindow::on_clearButton_clicked()
+{
+    // Sets every other button to release
+    ui->startButton->setChecked(false);
+    ui->drawEdgeButton->setChecked(false);
+    ui->drawVertexButton->setChecked(false);
+    ui->showPathButton->setChecked(false);
+
+    // Sets cursor to pointer
+    ui->graphArea->setCursorMode(GraphArea::Cursor::POINTER);
+
+    // Clear algorithm
+    ui->graphArea->clearAlgorithm();
+}

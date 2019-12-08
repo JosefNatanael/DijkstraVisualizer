@@ -262,3 +262,29 @@ void GraphArea::clearColoredEdges()
     }
     coloredEdges.clear();
 }
+
+void GraphArea::clearAlgorithm()
+{
+    // Reset graph area
+    clearColoredEdges();
+    startVertex = nullptr;
+    delete minHeap;
+    minHeap = nullptr;
+    delete unvisitedVertices;
+    unvisitedVertices = nullptr;
+    dijkstraSourceVertex = nullptr;
+    dijkstraCurrentVertex = nullptr;
+    dijkstraDestinationVertex = nullptr;
+    isVisualized = false;
+
+    // Reset all vertices
+    for (Vertex* v : adjacencyList) {
+        v->setID(-1);
+        v->setDistance(std::numeric_limits<int>::max());
+        v->setPreviousVertex(nullptr);
+        v->setInPriorityQueue(false);
+        v->changeColor(Qt::black);
+        v->update();
+    }
+    update();
+}

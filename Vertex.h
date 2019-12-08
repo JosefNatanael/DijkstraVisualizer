@@ -50,9 +50,6 @@ public:
     void                            setPreviousVertex(Vertex* v) { previousVertex = v; }
     Vertex*                         getPreviousVertex() const { return previousVertex; }
 
-
-//    void                            setSourceVertex(bool b) { isSourceVertex = b; }
-
 protected:
     QVariant                        itemChange(GraphicsItemChange change, const QVariant &value) override;
     void                            mousePressEvent(QGraphicsSceneMouseEvent *event) override;

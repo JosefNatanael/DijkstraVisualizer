@@ -21,6 +21,7 @@ private slots:
     void on_drawEdgeButton_clicked();
     void on_startButton_clicked();
     void on_showPathButton_clicked();
+    void on_clearButton_clicked();
 
     void onTurnOffStartButton();
     void onTurnOffShowPathButton();

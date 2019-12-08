@@ -34,7 +34,7 @@
       <item>
        <widget class="QPushButton" name="randomGenerateButton">
         <property name="text">
-         <string>Random Generate</string>
+         <string>Random Generate (not working)</string>
         </property>
        </widget>
       </item>
@@ -62,7 +62,7 @@
       <item>
        <widget class="QPushButton" name="stepButton">
         <property name="text">
-         <string>Step</string>
+         <string>Step (not working)</string>
         </property>
        </widget>
       </item>
@@ -75,7 +75,7 @@
          </sizepolicy>
         </property>
         <property name="text">
-         <string>Auto Step</string>
+         <string>Auto Step (not working)</string>
         </property>
        </widget>
       </item>

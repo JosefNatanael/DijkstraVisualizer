@@ -34,6 +34,7 @@ public:
     ~GraphArea();
     void setCursorMode(Cursor cursor) { this->cursor = cursor; }
     Cursor getCursorMode() const { return this->cursor; }
+    void clearAlgorithm();
 
 protected:
     void mousePressEvent(QMouseEvent* event);
