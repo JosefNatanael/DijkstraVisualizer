@@ -45,8 +45,8 @@ public:
     void                            setDistance(int dist) { distance = dist; update(); }
     int                             getID() const { return uniqueID; }
     void                            setID(int id) { uniqueID = id; }
-    bool                            getWasInPriorityQueue() { return wasInPriorityQueue; }
-    void                            setWasInPriorityQueue(bool b) { wasInPriorityQueue = b; }
+    bool                            getInPriorityQueue() { return inPriorityQueue; }
+    void                            setInPriorityQueue(bool b) { inPriorityQueue = b; }
     void                            setPreviousVertex(Vertex* v) { previousVertex = v; }
     Vertex*                         getPreviousVertex() const { return previousVertex; }
 
@@ -63,7 +63,7 @@ private:
     int                             distance = std::numeric_limits<int>::max();
     Vertex*                         previousVertex = nullptr;
     list<pair<Vertex*, Edge*>>      vertexEdgeList;
-    bool                            wasInPriorityQueue = false;
+    bool                            inPriorityQueue = false;
 
     QPointF                         newPos;
     GraphArea*                      graphArea;

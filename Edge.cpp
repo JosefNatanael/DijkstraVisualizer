@@ -59,7 +59,7 @@ QRectF Edge::boundingRect() const
     if (!source || !destination)
         return QRectF();
 
-    qreal extra = 10;
+    qreal extra = 15;
 
     return QRectF(sourcePoint, QSizeF(destinationPoint.x() - sourcePoint.x(),
                                       destinationPoint.y() - sourcePoint.y()))
@@ -99,9 +99,15 @@ void Edge::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
     painter->drawLine(line);
 
     // Draw weight text
-//    QPointF vec = sourcePoint - destinationPoint;
+    QPointF vec = sourcePoint - destinationPoint;
+    QPointF orthogonal(vec.y(), -vec.x());
+    qreal length = qSqrt(QPointF::dotProduct(vec, vec));
 
-    QPointF pos = (sourcePoint + destinationPoint) / 2;
+    QPointF unitOrthogonal(orthogonal.x() / length, orthogonal.y() / length);
+    QPointF middlePos = (sourcePoint + destinationPoint) / 2;
+    QPointF pos = middlePos + 10 * unitOrthogonal;
+
+//    QPointF pos = (sourcePoint + destinationPoint) / 2;
     painter->drawText(pos, QString::number(weight));
 }
 

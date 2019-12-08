@@ -191,6 +191,7 @@ void GraphArea::startAlgorithm()
     }
     // Insert the source vertex into the priority queue.
     minHeap->insert(dijkstraSourceVertex);
+    dijkstraSourceVertex->setInPriorityQueue(true);
     while (!minHeap->isEmpty()) {
         Vertex* minDist = minHeap->findMin();
         if (minDist != nullptr) {
@@ -200,6 +201,7 @@ void GraphArea::startAlgorithm()
             }
             minDist->changeColor(Qt::gray);
             minHeap->remove(minDist);
+            minDist->setInPriorityQueue(false);
         }
         list<pair<Vertex*, Edge*>>& currentPairsList = dijkstraCurrentVertex->pairs();
         for (list<pair<Vertex*, Edge*>>::iterator it = currentPairsList.begin(); it != currentPairsList.end(); ++it) {
@@ -208,13 +210,14 @@ void GraphArea::startAlgorithm()
             int currentNeighborDistance = it->first->getDistance();
             int potentialNewDist = it->second->getWeight() + dijkstraCurrentVertex->getDistance();
             if (potentialNewDist < currentNeighborDistance) {
+                if (it->first->getInPriorityQueue()) {
+                    minHeap->remove(it->first);
+                    it->first->setInPriorityQueue(false);
+                }
                 it->first->setDistance(potentialNewDist);
                 it->first->setPreviousVertex(dijkstraCurrentVertex);
-                if (!it->first->getWasInPriorityQueue()) {
-                    minHeap->insert(it->first);
-                    it->first->setWasInPriorityQueue(true);
-                }
-
+                minHeap->insert(it->first);
+                it->first->setInPriorityQueue(true);
             }
 
         }
