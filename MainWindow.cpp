@@ -158,7 +158,7 @@ void MainWindow::on_showPathButton_clicked()
 
     // Visualized and show path, then turn off, return
     if (ui->graphArea->isVisualized && cursor == GraphArea::Cursor::SHOWPATH) {
-        ui->graphArea->setCursorMode(GraphArea::Cursor::SHOWPATH);
+        ui->graphArea->setCursorMode(GraphArea::Cursor::VISUALIZED);
         ui->graphArea->clearColoredEdges();
         return;
     }
