@@ -36,7 +36,7 @@ public:
 
     bool isEmpty() const { return root == nullptr; }
     VertexPtr findMin() const;
-    bool contains(VertexPtr v) const;
+//    bool contains(VertexPtr v) const;
 
     void insert(VertexPtr v);
     void remove(VertexPtr v);

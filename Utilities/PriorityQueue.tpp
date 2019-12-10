@@ -77,22 +77,23 @@ VertexPtr PriorityQueue<VertexPtr>::findMin() const
     return leftAVL.findMin();
 }
 
-template <typename VertexPtr>
-bool PriorityQueue<VertexPtr>::contains(VertexPtr v) const
-{
-    if (isEmpty())
-        return false;
-    else if (v == root->vertex)
-        return true;
-    else if (v != root->vertex && v->getDistance() == root->vertex->getDistance()) {
-        leftSubtree().contains(v);
-        rightSubtree().contains(v);
-    }
-    else if (v->getDistance() < root->vertex->getDistance())
-        return leftSubtree().contains(v);
-    else
-        return rightSubtree().contains(v);
-}
+// not used
+//template <typename VertexPtr>
+//bool PriorityQueue<VertexPtr>::contains(VertexPtr v) const
+//{
+//    if (isEmpty())
+//        return false;
+//    else if (v == root->vertex)
+//        return true;
+//    else if (v != root->vertex && v->getDistance() == root->vertex->getDistance()) {
+//        leftSubtree().contains(v);
+//        rightSubtree().contains(v);
+//    }
+//    else if (v->getDistance() < root->vertex->getDistance())
+//        return leftSubtree().contains(v);
+//    else
+//        return rightSubtree().contains(v);
+//}
 
 template <typename VertexPtr>
 void PriorityQueue<VertexPtr>::insert(VertexPtr v)
