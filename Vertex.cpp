@@ -109,6 +109,11 @@ QVariant Vertex::itemChange(GraphicsItemChange change, const QVariant &value)
 void Vertex::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->buttons() == Qt::LeftButton) {
+        setFlag(ItemIsMovable, true);
+        if (graphArea->getCursorMode() == GraphArea::Cursor::EDGE) {
+            setFlag(ItemIsSelectable);
+            setFlag(ItemIsMovable, false);
+        }
         emit vertexClicked(this);
     }
     else if ((event->buttons() == Qt::RightButton && graphArea->getCursorMode() == GraphArea::Cursor::POINTER)
