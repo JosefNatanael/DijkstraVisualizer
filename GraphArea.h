@@ -35,6 +35,8 @@ public:
     void setCursorMode(Cursor cursor) { this->cursor = cursor; }
     Cursor getCursorMode() const { return this->cursor; }
 
+    void randomGenerator();
+
 protected:
     void mousePressEvent(QMouseEvent* event);
 

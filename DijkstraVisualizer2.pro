@@ -27,6 +27,7 @@ CONFIG += c++11
 SOURCES += \
         Edge.cpp \
         GraphArea.cpp \
+        Utilities/RandomGenDialog.cpp \
         Utilities/UnvisitedVertices.cpp \
         Utilities/WindowHelper.cpp \
         Vertex.cpp \
@@ -39,12 +40,14 @@ HEADERS += \
         GraphArea.h \
         MainWindow.h \
         Utilities/PriorityQueue.h \
+        Utilities/RandomGenDialog.h \
         Utilities/UnvisitedVertices.h \
         Utilities/WindowHelper.h \
         Vertex.h
 
 FORMS += \
-        MainWindow.ui
+        MainWindow.ui \
+        Utilities/RandomGenDialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

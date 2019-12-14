@@ -27,6 +27,8 @@ private slots:
     void onTurnOffStartButton();
     void onTurnOffShowPathButton();
 
+    void on_randomGenerateButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

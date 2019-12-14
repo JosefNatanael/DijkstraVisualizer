@@ -205,3 +205,8 @@ void MainWindow::on_actionNew_triggered()
 
     ui->graphArea->newSlate();
 }
+
+void MainWindow::on_randomGenerateButton_clicked()
+{
+    ui->graphArea->randomGenerator();
+}

@@ -1,11 +1,15 @@
 #include "GraphArea.h"
 #include "Vertex.h"
 #include "Edge.h"
-
-#include <QDebug>
+#include "Utilities/RandomGenDialog.h"
 #include "Utilities/WindowHelper.h"
+
 #include <QDesktopWidget>
 #include <QInputDialog>
+#include <QRandomGenerator>
+#include <QDateTime>
+#include <QtMath>
+#include <QDebug>
 
 #include <limits>
 
@@ -32,14 +36,73 @@ GraphArea::GraphArea(QWidget *parent)
  */
 GraphArea::~GraphArea()
 {
-    removeAndDeallocVertexEdge();
+    removeAndDeallocVertexEdge();   // Redundant call, Vertex and Edge are parented to this and mainwindow, it will auto deallocate.
     delete unvisitedVertices;
     delete minHeap;
 }
 
+void GraphArea::randomGenerator()
+{
+    RandomGenDialog dialog;
+    int numVertices = 0;
+    double density = 0;
+    int maxWeight = 0;
+    dialog.setModal(true);
+    if (dialog.exec() == QDialog::Accepted) {
+        dialog.getValues(numVertices, density, maxWeight);
+    }
+    else {
+        qDebug() << "Rejected";
+        return;
+    }
+    if (numVertices == 0 || qFuzzyCompare(density, 0)) {
+        return;
+    }
+    for (int i = 0; i < numVertices; ++i) {
+        QRandomGenerator rand(QRandomGenerator::global()->generate());
+        QPoint position(rand.bounded(25, this->size().width() - 25), rand.bounded(25, this->size().height() - 25));
+        // Create new vertex, add to scene, setup connection, add to vertex list.
+        Vertex* vertex = new Vertex(this);
+        graphicsScene->addItem(vertex);
+        vertex->setPos(position);
+        connect(vertex, &Vertex::vertexClicked, this, &GraphArea::onVertexClicked);
+        connect(vertex, &Vertex::promptCreatePair, this, &GraphArea::onPromptCreatePair);
+        connect(vertex, &Vertex::destroyVertex, this, &GraphArea::onDestroyVertex);
+        adjacencyList.push_back(vertex);
+    }
+
+    if (adjacencyList.size() > std::numeric_limits<int>::max()) {
+        qDebug() << "Too many edges, overflowing";
+        return;
+    }
+    std::vector<std::pair<Vertex*, Vertex*>> vertexPairs;
+    int N = static_cast<int>(adjacencyList.size());
+    int maximum = N * (N - 1) / 2;
+    int edgesToGenerate = static_cast<int>(density * maximum);
+
+    while (edgesToGenerate != 0) {
+        int weight = QRandomGenerator::global()->bounded(0, maxWeight + 1);
+        int vertexAIndex = QRandomGenerator::global()->bounded(0, N);
+        int vertexBIndex = QRandomGenerator::global()->bounded(0, N);
+        Vertex* vertexA = adjacencyList[static_cast<unsigned>(vertexAIndex)];
+        Vertex* vertexB = adjacencyList[static_cast<unsigned>(vertexBIndex)];
+        std::pair<Vertex*, Vertex*> currentPair = std::make_pair(vertexA, vertexB);
+        std::pair<Vertex*, Vertex*> currentPairRev = std::make_pair(vertexB, vertexA);
+        bool notPaired = false;
+        std::vector<std::pair<Vertex*, Vertex*>>::iterator iter = std::find(vertexPairs.begin(), vertexPairs.end(), currentPair);
+        std::vector<std::pair<Vertex*, Vertex*>>::iterator iterRev = std::find(vertexPairs.begin(), vertexPairs.end(), currentPairRev);
+        notPaired = (iter == vertexPairs.end() && iterRev == vertexPairs.end()) ? true : false;
+        if (vertexAIndex != vertexBIndex && notPaired) {
+            graphicsScene->addItem(new Edge(vertexA, vertexB, this, weight));
+            vertexPairs.push_back(currentPair);
+            vertexPairs.push_back(currentPairRev);
+            --edgesToGenerate;
+        }
+    }
+}
+
 ///////////////////// DEBUGGING HELPER /////////////////////
 ///
-#include "QRandomGenerator"
 void printEnum(int en) {
     switch (en) {
     case 0:
@@ -80,6 +143,7 @@ void GraphArea::mousePressEvent(QMouseEvent* event)
 
     // DEBUGGING PURPOSES
     printEnum(static_cast<int>(cursor));
+    // DEBUGGING PURPOSES
 
     // Not left click, return.
     if (event->buttons() != Qt::LeftButton) {
@@ -286,6 +350,7 @@ void GraphArea::clearAlgorithm()
     update();
 }
 
+// Extraneous function, to implement new (not in the grading scheme).
 void GraphArea::newSlate()
 {
     clearAlgorithm();
@@ -294,14 +359,17 @@ void GraphArea::newSlate()
     update();
 }
 
+// Extraneous function, to implement new (not in the grading scheme).
 void GraphArea::removeAndDeallocVertexEdge()
 {
     std::vector<Edge*> edgesToRemove;
     for (Vertex* v : adjacencyList) {
         list<pair<Vertex*, Edge*>>& currentPairsList = v->pairs();
         for (list<pair<Vertex*, Edge*>>::iterator it = currentPairsList.begin(); it != currentPairsList.end(); ++it) {
-            edgesToRemove.push_back(it->second);
-            it->second->detachFromIncidentVertices();
+            std::vector<Edge*>::iterator it2 = std::find(edgesToRemove.begin(), edgesToRemove.end(), it->second);
+            if (it2 == edgesToRemove.end()) {
+                edgesToRemove.push_back(it->second);
+            }
         }
         delete v;
     }
