@@ -285,7 +285,7 @@ void GraphArea::startAlgorithm()
         Vertex* minDist = minHeap->findMin();
         if (minDist != nullptr) {
             if (unvisitedVertices->exists(minDist->getID())) {
-//                actionsList.push_back(Action(Command::CURRENTVERTEX, minDist, dijkstraCurrentVertex));
+                actionsList.push_back(Action(Command::CURRENTVERTEX, minDist, dijkstraCurrentVertex));
                 dijkstraCurrentVertex = minDist;
                 unvisitedVertices->removeNode(minDist->getID());
             }
@@ -298,7 +298,7 @@ void GraphArea::startAlgorithm()
         for (list<pair<Vertex*, Edge*>>::iterator it = currentPairsList.begin(); it != currentPairsList.end(); ++it) {
             // If visited, skip
             if (!unvisitedVertices->exists(it->first->getID())) {
-//                actionsList.push_back(Action(Command::VISITEDVERTEX, it->first));
+                actionsList.push_back(Action(Command::VISITEDVERTEX, it->first));
                 continue;
             }
 
@@ -306,23 +306,24 @@ void GraphArea::startAlgorithm()
             int currentNeighborDistance = it->first->getDistance();
             int potentialNewDist = it->second->getWeight() + dijkstraCurrentVertex->getDistance();
             if (potentialNewDist < currentNeighborDistance) {
-                it->first->setDistance(potentialNewDist);
-                it->first->setPreviousVertex(dijkstraCurrentVertex);
                 if (it->first->getInPriorityQueue()) {
                     minHeap->remove(it->first);
                     it->first->setInPriorityQueue(false);
-//                    actionsList.push_back(Action(Command::UPDATEDINHEAP, it->first, nullptr, it->second));
+                    it->first->setDistance(potentialNewDist);
+                    it->first->setPreviousVertex(dijkstraCurrentVertex);
+                    actionsList.push_back(Action(Command::UPDATEDINHEAP, it->first, nullptr, it->second));
                 }
                 else {
-//                    actionsList.push_back(Action(Command::VERTEXUPDATE, it->first, nullptr, it->second));
+                    it->first->setDistance(potentialNewDist);
+                    it->first->setPreviousVertex(dijkstraCurrentVertex);
+                    actionsList.push_back(Action(Command::VERTEXUPDATE, it->first, nullptr, it->second));
                 }
                 minHeap->insert(it->first);
                 it->first->setInPriorityQueue(true);
             }
             else {
-//                actionsList.push_back(Action(Command::VERTEXNOUPDATE, it->first, nullptr, it->second));
+                actionsList.push_back(Action(Command::VERTEXNOUPDATE, it->first, nullptr, it->second));
             }
-
         }
     }
     cursor = Cursor::CALCULATED;
