@@ -2,6 +2,11 @@
 #include "ui_MainWindow.h"
 
 #include "GraphArea.h"
+#include "Vertex.h"
+#include "Edge.h"
+
+#include <QMessageBox>
+#include <QDebug>
 
 /**
  * @brief MainWindow::MainWindow constructor.
@@ -62,9 +67,9 @@ void MainWindow::on_drawVertexButton_clicked()
         ui->graphArea->startVertex->update();
     }
 
-    if (ui->graphArea->isVisualized) {
+    if (ui->graphArea->isCalculated) {
         if (cursor == GraphArea::Cursor::SHOWPATH) {
-            ui->graphArea->setCursorMode(GraphArea::Cursor::VISUALIZED);
+            ui->graphArea->setCursorMode(GraphArea::Cursor::CALCULATED);
         }
         return;
     }
@@ -96,9 +101,9 @@ void MainWindow::on_drawEdgeButton_clicked()
         ui->graphArea->startVertex->update();
     }
 
-    if (ui->graphArea->isVisualized) {
+    if (ui->graphArea->isCalculated) {
         if (cursor == GraphArea::Cursor::SHOWPATH) {
-            ui->graphArea->setCursorMode(GraphArea::Cursor::VISUALIZED);
+            ui->graphArea->setCursorMode(GraphArea::Cursor::CALCULATED);
         }
         return;
     }
@@ -127,9 +132,9 @@ void MainWindow::on_startButton_clicked()
         ui->graphArea->startVertex->update();
     }
 
-    if (ui->graphArea->isVisualized) {
+    if (ui->graphArea->isCalculated) {
         if (cursor == GraphArea::Cursor::SHOWPATH) {
-            ui->graphArea->setCursorMode(GraphArea::Cursor::VISUALIZED);
+            ui->graphArea->setCursorMode(GraphArea::Cursor::CALCULATED);
         }
         return;
     }
@@ -156,9 +161,9 @@ void MainWindow::on_showPathButton_clicked()
         ui->graphArea->startVertex->update();
     }
 
-    // Visualized and show path, then turn off, return
-    if (ui->graphArea->isVisualized && cursor == GraphArea::Cursor::SHOWPATH) {
-        ui->graphArea->setCursorMode(GraphArea::Cursor::VISUALIZED);
+    // Calculated and show path, then turn off, return
+    if (ui->graphArea->isCalculated && cursor == GraphArea::Cursor::SHOWPATH) {
+        ui->graphArea->setCursorMode(GraphArea::Cursor::CALCULATED);
         ui->graphArea->clearColoredEdges();
         return;
     }
@@ -210,3 +215,110 @@ void MainWindow::on_randomGenerateButton_clicked()
 {
     ui->graphArea->randomGenerator();
 }
+
+void MainWindow::on_stepButton_clicked()
+{
+    // Sets every other button to release
+    ui->startButton->setChecked(false);
+    ui->drawEdgeButton->setChecked(false);
+    ui->drawVertexButton->setChecked(false);
+    ui->showPathButton->setChecked(false);
+
+    if (ui->graphArea->isCalculated) {
+        // If there is still actions in the action list
+        if (!ui->graphArea->actionsList.empty()) {
+            ui->graphArea->clearColoredEdges();
+            GraphArea::Action act = ui->graphArea->actionsList.front();
+            ui->graphArea->actionsList.pop_front();
+            switch (act.commandType) {
+            case GraphArea::Command::NONE:
+                qDebug() << "Error: Action is wrongly constructed";
+                break;
+            case GraphArea::Command::CURRENTVERTEX:
+            {
+                if (act.previousVertex != nullptr) {
+                    act.previousVertex->changeColor(Qt::gray);
+                    act.previousVertex->update();
+                }
+                if (ui->graphArea->actionsList.size() > 1) {
+                    act.vertexConsidered->changeColor(Qt::blue);
+                }
+                else {
+                    act.vertexConsidered->changeColor(Qt::gray);
+                }
+                break;
+            }
+            case GraphArea::Command::VERTEXUPDATE:
+                act.vertexConsidered->changeColor(Qt::green);
+                act.edgeConsidered->setLineColor(Qt::blue);
+                ui->graphArea->coloredEdges.push_back(act.edgeConsidered);
+                break;
+            case GraphArea::Command::VERTEXNOUPDATE:
+                act.vertexConsidered->changeColor(Qt::red);
+                act.edgeConsidered->setLineColor(Qt::blue);
+                ui->graphArea->coloredEdges.push_back(act.edgeConsidered);
+                break;
+            case GraphArea::Command::VISITEDVERTEX:
+                act.vertexConsidered->changeColor(Qt::gray);
+                break;
+            case GraphArea::Command::UPDATEDINHEAP:
+                act.vertexConsidered->changeColor(Qt::cyan);
+                act.edgeConsidered->setLineColor(Qt::blue);
+                ui->graphArea->coloredEdges.push_back(act.edgeConsidered);
+                break;
+            }
+            if (act.vertexConsidered != nullptr)
+                act.vertexConsidered->update();
+            if (act.edgeConsidered != nullptr)
+                act.edgeConsidered->update();
+
+            // If there is no more actions in the action list
+            if (ui->graphArea->actionsList.empty()) {
+                ui->graphArea->isVisualized = true;
+            }
+            ui->graphArea->update();
+        }
+        else {
+            QMessageBox msgBox;
+            msgBox.setWindowTitle("Finished");
+            msgBox.setText("The algorithm is finished.");
+            msgBox.exec();
+        }
+    }
+}
+
+///////////////////// DEBUGGING HELPER /////////////////////
+///
+void printEn(int en) {
+    switch (en) {
+    case 0:
+        qDebug() << "none";
+        break;
+    case 1:
+        qDebug() << "currentvertex";
+        break;
+    case 2:
+        qDebug() << "vertexupdate";
+        break;
+    case 3:
+        qDebug() << "vertexnoupdate";
+        break;
+    case 4:
+        qDebug() << "visitedvertex";
+        break;
+    case 5:
+        qDebug() << "updatedinheap";
+        break;
+    }
+}
+///////////////////// DEBUGGING HELPER /////////////////////
+
+// For Debugging purposes only
+void MainWindow::on_actionDebug_only_triggered()
+{
+    for (auto i : ui->graphArea->actionsList) {
+        printEn(static_cast<int>(i.commandType));
+    }
+}
+
+

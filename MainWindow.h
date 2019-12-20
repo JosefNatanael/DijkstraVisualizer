@@ -29,6 +29,10 @@ private slots:
 
     void on_randomGenerateButton_clicked();
 
+    void on_stepButton_clicked();
+
+    void on_actionDebug_only_triggered();
+
 private:
     Ui::MainWindow *ui;
 };

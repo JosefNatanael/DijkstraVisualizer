@@ -43,6 +43,8 @@ public:
     void                            setCandidatePairFound(bool b) { candidatePairFound = b; }
     int                             getDistance() const { return distance; }
     void                            setDistance(int dist) { distance = dist; update(); }
+    int                             getDistanceWhenVis() const { return distanceWhenVis; }
+    void                            setDistanceWhenVis(int dist) { distanceWhenVis = dist; update(); }
     int                             getID() const { return uniqueID; }
     void                            setID(int id) { uniqueID = id; }
     bool                            getInPriorityQueue() { return inPriorityQueue; }
@@ -58,6 +60,7 @@ protected:
 private:
     int                             uniqueID = -1;
     int                             distance = std::numeric_limits<int>::max();
+    int                             distanceWhenVis = std::numeric_limits<int>::max();
     Vertex*                         previousVertex = nullptr;
     list<pair<Vertex*, Edge*>>      vertexEdgeList;
     bool                            inPriorityQueue = false;

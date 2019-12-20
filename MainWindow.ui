@@ -51,7 +51,7 @@
       <item>
        <widget class="QPushButton" name="stepButton">
         <property name="text">
-         <string>Step (not working)</string>
+         <string>Step</string>
         </property>
        </widget>
       </item>
@@ -90,6 +90,7 @@
     <addaction name="actionNew"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
+    <addaction name="actionDebug_only"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
@@ -106,6 +107,11 @@
   <action name="actionAbout_Me">
    <property name="text">
     <string>About Me</string>
+   </property>
+  </action>
+  <action name="actionDebug_only">
+   <property name="text">
+    <string>Debug only</string>
    </property>
   </action>
  </widget>

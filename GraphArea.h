@@ -26,7 +26,7 @@ public:
         START,
         STARTED,
         SHOWPATH,
-        VISUALIZED
+        CALCULATED
     };
 
 public:
@@ -53,6 +53,29 @@ private:
     void removeAndDeallocVertexEdge();
 
 private:
+    enum class Command {
+        NONE,
+        CURRENTVERTEX,
+        VERTEXUPDATE,
+        VERTEXNOUPDATE,
+        VISITEDVERTEX,
+        UPDATEDINHEAP
+    };
+    struct Action {
+        Command commandType = Command::NONE;
+        Vertex* vertexConsidered = nullptr;
+        Vertex* previousVertex = nullptr;
+        Edge* edgeConsidered = nullptr;
+        Action() = delete;
+        explicit Action(Command cmd, Vertex* vertex = nullptr, Vertex* preVer = nullptr, Edge* edge = nullptr)
+            : commandType(cmd)
+            , vertexConsidered(vertex)
+            , previousVertex(preVer)
+            , edgeConsidered(edge)
+        {}
+    };
+
+private:
     QGraphicsScene* graphicsScene;
     Cursor cursor = Cursor::POINTER;
     std::vector<Vertex*> adjacencyList;
@@ -65,6 +88,9 @@ private:
     Vertex* dijkstraCurrentVertex = nullptr;
     Vertex* dijkstraDestinationVertex = nullptr;
 
+    std::list<Action> actionsList;
+
+    bool isCalculated = false;
     bool isVisualized = false;
 
 signals:

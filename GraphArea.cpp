@@ -124,7 +124,7 @@ void printEnum(int en) {
         qDebug() << "showpath" << QRandomGenerator::global()->generate();
         break;
     case 6:
-        qDebug() << "visualized" << QRandomGenerator::global()->generate();
+        qDebug() << "calculated" << QRandomGenerator::global()->generate();
         break;
     }
 }
@@ -132,7 +132,6 @@ void printEnum(int en) {
 
 /**
  * @brief Detects mousePressEvent, specifically position.
- * @details Emits clicked position in the visualizer area.
  * @param event Mouse press event.
  */
 void GraphArea::mousePressEvent(QMouseEvent* event)
@@ -185,7 +184,7 @@ void GraphArea::mousePressEvent(QMouseEvent* event)
     case Cursor::SHOWPATH:
         startVertex = nullptr;
         break;
-    case Cursor::VISUALIZED:
+    case Cursor::CALCULATED:
         break;
     }
 }
@@ -207,7 +206,7 @@ void GraphArea::onVertexClicked(Vertex* vertex)
     else if (cursor == Cursor::START) {
         cursor = Cursor::STARTED;
         dijkstraSourceVertex = dijkstraCurrentVertex = vertex;
-        vertex->changeColor(QColor(26, 83, 255));
+        vertex->changeColor(Qt::blue);
         vertex->setDistance(0);
         emit turnOffStartButton();
     }
@@ -215,11 +214,11 @@ void GraphArea::onVertexClicked(Vertex* vertex)
         emit turnOffStartButton();
         startAlgorithm();
     }
-    else if (cursor == Cursor::VISUALIZED) {
+    else if (cursor == Cursor::CALCULATED) {
         emit turnOffStartButton();
     }
     else if (cursor == Cursor::SHOWPATH) {
-        if (!isVisualized) {
+        if (!isCalculated) {
             emit turnOffShowPathButton();
             return;
         }
@@ -232,7 +231,7 @@ void GraphArea::onVertexClicked(Vertex* vertex)
             list<pair<Vertex*, Edge*>>::iterator it;
             it = std::find_if(currentList.begin(), currentList.end(), [before](pair<Vertex*, Edge*> p){ return p.first == before; });
             if (it != currentList.end()) {
-                it->second->setLineColor(QColor(26, 83, 255));
+                it->second->setLineColor(Qt::blue);
                 it->second->update();
                 coloredEdges.push_back(it->second);
             }
@@ -281,38 +280,53 @@ void GraphArea::startAlgorithm()
     // Insert the source vertex into the priority queue.
     minHeap->insert(dijkstraSourceVertex);
     dijkstraSourceVertex->setInPriorityQueue(true);
+
     while (!minHeap->isEmpty()) {
         Vertex* minDist = minHeap->findMin();
         if (minDist != nullptr) {
             if (unvisitedVertices->exists(minDist->getID())) {
+//                actionsList.push_back(Action(Command::CURRENTVERTEX, minDist, dijkstraCurrentVertex));
                 dijkstraCurrentVertex = minDist;
                 unvisitedVertices->removeNode(minDist->getID());
             }
-            minDist->changeColor(Qt::gray);
+//            minDist->changeColor(Qt::gray);   // Original version no bonus
             minHeap->remove(minDist);
             minDist->setInPriorityQueue(false);
         }
+
         list<pair<Vertex*, Edge*>>& currentPairsList = dijkstraCurrentVertex->pairs();
         for (list<pair<Vertex*, Edge*>>::iterator it = currentPairsList.begin(); it != currentPairsList.end(); ++it) {
-            if (!unvisitedVertices->exists(it->first->getID()))
+            // If visited, skip
+            if (!unvisitedVertices->exists(it->first->getID())) {
+//                actionsList.push_back(Action(Command::VISITEDVERTEX, it->first));
                 continue;
+            }
+
+            // Find neighbor vertex, with the edge connecting them
             int currentNeighborDistance = it->first->getDistance();
             int potentialNewDist = it->second->getWeight() + dijkstraCurrentVertex->getDistance();
             if (potentialNewDist < currentNeighborDistance) {
+                it->first->setDistance(potentialNewDist);
+                it->first->setPreviousVertex(dijkstraCurrentVertex);
                 if (it->first->getInPriorityQueue()) {
                     minHeap->remove(it->first);
                     it->first->setInPriorityQueue(false);
+//                    actionsList.push_back(Action(Command::UPDATEDINHEAP, it->first, nullptr, it->second));
                 }
-                it->first->setDistance(potentialNewDist);
-                it->first->setPreviousVertex(dijkstraCurrentVertex);
+                else {
+//                    actionsList.push_back(Action(Command::VERTEXUPDATE, it->first, nullptr, it->second));
+                }
                 minHeap->insert(it->first);
                 it->first->setInPriorityQueue(true);
+            }
+            else {
+//                actionsList.push_back(Action(Command::VERTEXNOUPDATE, it->first, nullptr, it->second));
             }
 
         }
     }
-    cursor = Cursor::VISUALIZED;
-    isVisualized = true;
+    cursor = Cursor::CALCULATED;
+    isCalculated = true;
 }
 
 void GraphArea::clearColoredEdges()
@@ -336,7 +350,8 @@ void GraphArea::clearAlgorithm()
     dijkstraSourceVertex = nullptr;
     dijkstraCurrentVertex = nullptr;
     dijkstraDestinationVertex = nullptr;
-    isVisualized = false;
+    isCalculated = false;
+    actionsList.clear();
 
     // Reset all vertices
     for (Vertex* v : adjacencyList) {
