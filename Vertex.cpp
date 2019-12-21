@@ -81,15 +81,10 @@ void Vertex::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget 
     painter->drawEllipse(-18, -18, 36, 36);
     painter->setBrush(Qt::white);
     painter->drawEllipse(-16, -16, 32, 32);
-    // TODO:
-    if (distance != std::numeric_limits<int>::max()) {
-        painter->drawText(-5, 5, QString::number(distance));
+    if (distanceWhenVis != std::numeric_limits<int>::max()) {
+//        painter->drawText(-5, 5, QString::number(distance));
+        painter->drawText(-5, 5, QString::number(distanceWhenVis));
     }
-}
-
-void Vertex::changeColor(QColor color)
-{
-    vertexColor = color;
 }
 
 QVariant Vertex::itemChange(GraphicsItemChange change, const QVariant &value)

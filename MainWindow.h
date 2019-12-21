@@ -28,10 +28,9 @@ private slots:
     void onTurnOffShowPathButton();
 
     void on_randomGenerateButton_clicked();
-
     void on_stepButton_clicked();
-
     void on_actionDebug_only_triggered();
+    void on_autoStepButton_clicked();
 
 private:
     Ui::MainWindow *ui;

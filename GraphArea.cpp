@@ -101,7 +101,7 @@ void GraphArea::randomGenerator()
     }
 }
 
-///////////////////// DEBUGGING HELPER /////////////////////
+///////////////////// DEBUGGING HELPER START /////////////////////
 ///
 void printEnum(int en) {
     switch (en) {
@@ -128,7 +128,7 @@ void printEnum(int en) {
         break;
     }
 }
-///////////////////// DEBUGGING HELPER /////////////////////
+///////////////////// DEBUGGING HELPER END /////////////////////
 
 /**
  * @brief Detects mousePressEvent, specifically position.
@@ -285,7 +285,7 @@ void GraphArea::startAlgorithm()
         Vertex* minDist = minHeap->findMin();
         if (minDist != nullptr) {
             if (unvisitedVertices->exists(minDist->getID())) {
-                actionsList.push_back(Action(Command::CURRENTVERTEX, minDist, dijkstraCurrentVertex));
+                actionsList.push_back(Action(Command::CURRENTVERTEX, minDist, dijkstraCurrentVertex, nullptr, minDist->getDistance()));
                 dijkstraCurrentVertex = minDist;
                 unvisitedVertices->removeNode(minDist->getID());
             }
@@ -298,7 +298,7 @@ void GraphArea::startAlgorithm()
         for (list<pair<Vertex*, Edge*>>::iterator it = currentPairsList.begin(); it != currentPairsList.end(); ++it) {
             // If visited, skip
             if (!unvisitedVertices->exists(it->first->getID())) {
-                actionsList.push_back(Action(Command::VISITEDVERTEX, it->first));
+                actionsList.push_back(Action(Command::VISITEDVERTEX, it->first, nullptr, nullptr, it->first->getDistance()));
                 continue;
             }
 
@@ -311,23 +311,25 @@ void GraphArea::startAlgorithm()
                     it->first->setInPriorityQueue(false);
                     it->first->setDistance(potentialNewDist);
                     it->first->setPreviousVertex(dijkstraCurrentVertex);
-                    actionsList.push_back(Action(Command::UPDATEDINHEAP, it->first, nullptr, it->second));
+                    actionsList.push_back(Action(Command::UPDATEDINHEAP, it->first, nullptr, it->second, it->first->getDistance()));
                 }
                 else {
                     it->first->setDistance(potentialNewDist);
                     it->first->setPreviousVertex(dijkstraCurrentVertex);
-                    actionsList.push_back(Action(Command::VERTEXUPDATE, it->first, nullptr, it->second));
+                    actionsList.push_back(Action(Command::VERTEXUPDATE, it->first, nullptr, it->second, it->first->getDistance()));
                 }
                 minHeap->insert(it->first);
                 it->first->setInPriorityQueue(true);
             }
             else {
-                actionsList.push_back(Action(Command::VERTEXNOUPDATE, it->first, nullptr, it->second));
+                actionsList.push_back(Action(Command::VERTEXNOUPDATE, it->first, nullptr, it->second, it->first->getDistance()));
             }
         }
     }
     cursor = Cursor::CALCULATED;
     isCalculated = true;
+//    actionsList.pop_front();
+    actionsList.push_back(Action(Command::CLEARALLVERTEX));
 }
 
 void GraphArea::clearColoredEdges()
@@ -352,6 +354,7 @@ void GraphArea::clearAlgorithm()
     dijkstraCurrentVertex = nullptr;
     dijkstraDestinationVertex = nullptr;
     isCalculated = false;
+    isVisualized = false;
     actionsList.clear();
 
     // Reset all vertices

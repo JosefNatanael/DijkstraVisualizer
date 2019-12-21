@@ -38,7 +38,7 @@ public:
     QRectF                          boundingRect() const override;
     QPainterPath                    shape() const override;
     void                            paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
-    void                            changeColor(QColor color);
+    void                            changeColor(QColor color) { vertexColor = color; }
 
     void                            setCandidatePairFound(bool b) { candidatePairFound = b; }
     int                             getDistance() const { return distance; }
@@ -51,6 +51,7 @@ public:
     void                            setInPriorityQueue(bool b) { inPriorityQueue = b; }
     void                            setPreviousVertex(Vertex* v) { previousVertex = v; }
     Vertex*                         getPreviousVertex() const { return previousVertex; }
+    QColor                          getVertexColor() { return vertexColor; }
 
 protected:
     QVariant                        itemChange(GraphicsItemChange change, const QVariant &value) override;

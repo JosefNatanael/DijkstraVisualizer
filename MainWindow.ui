@@ -56,6 +56,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="autoStepButton">
+        <property name="text">
+         <string>Auto Step</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QPushButton" name="clearButton">
         <property name="text">
          <string>Clear</string>
@@ -104,14 +111,14 @@
     <string>Exit</string>
    </property>
   </action>
-  <action name="actionAbout_Me">
-   <property name="text">
-    <string>About Me</string>
-   </property>
-  </action>
   <action name="actionDebug_only">
    <property name="text">
     <string>Debug only</string>
+   </property>
+  </action>
+  <action name="actionForce_show">
+   <property name="text">
+    <string>Force Show Completed</string>
    </property>
   </action>
  </widget>

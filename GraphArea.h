@@ -59,19 +59,22 @@ private:
         VERTEXUPDATE,
         VERTEXNOUPDATE,
         VISITEDVERTEX,
-        UPDATEDINHEAP
+        UPDATEDINHEAP,
+        CLEARALLVERTEX
     };
     struct Action {
         Command commandType = Command::NONE;
         Vertex* vertexConsidered = nullptr;
         Vertex* previousVertex = nullptr;
         Edge* edgeConsidered = nullptr;
+        int distance = -99;
         Action() = delete;
-        explicit Action(Command cmd, Vertex* vertex = nullptr, Vertex* preVer = nullptr, Edge* edge = nullptr)
+        explicit Action(Command cmd, Vertex* vertex = nullptr, Vertex* preVer = nullptr, Edge* edge = nullptr, int dist = -99)
             : commandType(cmd)
             , vertexConsidered(vertex)
             , previousVertex(preVer)
             , edgeConsidered(edge)
+            , distance(dist)
         {}
     };
 

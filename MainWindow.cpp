@@ -162,7 +162,7 @@ void MainWindow::on_showPathButton_clicked()
     }
 
     // Calculated and show path, then turn off, return
-    if (ui->graphArea->isCalculated && cursor == GraphArea::Cursor::SHOWPATH) {
+    if (ui->graphArea->isCalculated && ui->graphArea->isVisualized && cursor == GraphArea::Cursor::SHOWPATH) {
         ui->graphArea->setCursorMode(GraphArea::Cursor::CALCULATED);
         ui->graphArea->clearColoredEdges();
         return;
@@ -213,6 +213,11 @@ void MainWindow::on_actionNew_triggered()
 
 void MainWindow::on_randomGenerateButton_clicked()
 {
+    GraphArea::Cursor cursor = ui->graphArea->getCursorMode();
+    if (cursor == GraphArea::Cursor::STARTED || cursor == GraphArea::Cursor::CALCULATED
+            || cursor == GraphArea::Cursor::SHOWPATH || cursor == GraphArea::Cursor::START) {
+        return;
+    }
     ui->graphArea->randomGenerator();
 }
 
@@ -232,7 +237,7 @@ void MainWindow::on_stepButton_clicked()
             ui->graphArea->actionsList.pop_front();
             switch (act.commandType) {
             case GraphArea::Command::NONE:
-                qDebug() << "Error: Action is wrongly constructed";
+                qDebug() << "Error constructing Action";
                 break;
             case GraphArea::Command::CURRENTVERTEX:
             {
@@ -240,33 +245,56 @@ void MainWindow::on_stepButton_clicked()
                     act.previousVertex->changeColor(Qt::gray);
                     act.previousVertex->update();
                 }
-                if (ui->graphArea->actionsList.size() > 1) {
-                    act.vertexConsidered->changeColor(Qt::blue);
+                act.vertexConsidered->changeColor(Qt::blue);
+                act.vertexConsidered->setDistanceWhenVis(act.distance);
+                break;
+            }
+            case GraphArea::Command::VERTEXUPDATE:
+                act.vertexConsidered->changeColor(Qt::green);
+                act.vertexConsidered->setDistanceWhenVis(act.distance);
+
+                // Edge coloring
+                act.edgeConsidered->setLineColor(Qt::blue);
+                ui->graphArea->coloredEdges.push_back(act.edgeConsidered);
+                break;
+            case GraphArea::Command::VERTEXNOUPDATE:
+                act.vertexConsidered->changeColor(Qt::red);
+                act.vertexConsidered->setDistanceWhenVis(act.distance);
+
+                // Edge coloring
+                act.edgeConsidered->setLineColor(Qt::blue);
+                ui->graphArea->coloredEdges.push_back(act.edgeConsidered);
+                break;
+            case GraphArea::Command::VISITEDVERTEX:
+            {
+                if (act.vertexConsidered->getVertexColor() == Qt::gray) {
+                    on_stepButton_clicked();
                 }
                 else {
                     act.vertexConsidered->changeColor(Qt::gray);
                 }
                 break;
             }
-            case GraphArea::Command::VERTEXUPDATE:
-                act.vertexConsidered->changeColor(Qt::green);
-                act.edgeConsidered->setLineColor(Qt::blue);
-                ui->graphArea->coloredEdges.push_back(act.edgeConsidered);
-                break;
-            case GraphArea::Command::VERTEXNOUPDATE:
-                act.vertexConsidered->changeColor(Qt::red);
-                act.edgeConsidered->setLineColor(Qt::blue);
-                ui->graphArea->coloredEdges.push_back(act.edgeConsidered);
-                break;
-            case GraphArea::Command::VISITEDVERTEX:
-                act.vertexConsidered->changeColor(Qt::gray);
-                break;
             case GraphArea::Command::UPDATEDINHEAP:
                 act.vertexConsidered->changeColor(Qt::cyan);
+                act.vertexConsidered->setDistanceWhenVis(act.distance);
+
+                // Edge coloring
                 act.edgeConsidered->setLineColor(Qt::blue);
                 ui->graphArea->coloredEdges.push_back(act.edgeConsidered);
                 break;
+            case GraphArea::Command::CLEARALLVERTEX:
+            {
+                for (Vertex* v : ui->graphArea->adjacencyList) {
+                    v->changeColor(Qt::gray);
+                    v->setDistanceWhenVis(v->getDistance());
+                    v->update();
+                }
+                break;
             }
+            }
+
+            // Updating vertex and edge
             if (act.vertexConsidered != nullptr)
                 act.vertexConsidered->update();
             if (act.edgeConsidered != nullptr)
@@ -287,7 +315,7 @@ void MainWindow::on_stepButton_clicked()
     }
 }
 
-///////////////////// DEBUGGING HELPER /////////////////////
+///////////////////// DEBUGGING HELPER START /////////////////////
 ///
 void printEn(int en) {
     switch (en) {
@@ -311,14 +339,20 @@ void printEn(int en) {
         break;
     }
 }
-///////////////////// DEBUGGING HELPER /////////////////////
 
 // For Debugging purposes only
 void MainWindow::on_actionDebug_only_triggered()
 {
-    for (auto i : ui->graphArea->actionsList) {
+    for (GraphArea::Action i : ui->graphArea->actionsList) {
         printEn(static_cast<int>(i.commandType));
     }
 }
+///////////////////// DEBUGGING HELPER END /////////////////////
 
-
+void MainWindow::on_autoStepButton_clicked()
+{
+    while (!ui->graphArea->actionsList.empty()) {
+        on_stepButton_clicked();
+    }
+    ui->graphArea->isVisualized = true;
+}
