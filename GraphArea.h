@@ -10,6 +10,7 @@
 #include <utility>
 
 #include "Utilities/PriorityQueue.h"
+#include "Utilities/RedBlackPriority.h"
 #include "Utilities/UnvisitedVertices.h"
 
 class Vertex;
@@ -47,6 +48,7 @@ private slots:
 
 private:
     void startAlgorithm();
+    template <typename T> void coreAlgorithm(T);
     void clearColoredEdges();
     void clearAlgorithm();
     void newSlate();
@@ -85,7 +87,8 @@ private:
     std::vector<Edge*> coloredEdges;
     Vertex* startVertex = nullptr;
 
-    PriorityQueue<Vertex*>* minHeap = nullptr;
+    PriorityQueue<Vertex*>* avlPriority = nullptr;
+    RedBlackPriority* rbPriority = nullptr;
     UnvisitedVertices* unvisitedVertices = nullptr;
     Vertex* dijkstraSourceVertex = nullptr;
     Vertex* dijkstraCurrentVertex = nullptr;
@@ -96,9 +99,13 @@ private:
     bool isCalculated = false;
     bool isVisualized = false;
 
+    bool useAVL = true;     // False: use Red Black Tree
+
 signals:
     void turnOffStartButton();      // Slot in MainWindow
     void turnOffShowPathButton();   // Slot in MainWindow
 };
+
+#include "CoreAlgo.tpp"
 
 #endif // GRAPHAREA_H

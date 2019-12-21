@@ -76,6 +76,20 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QPushButton" name="avlButton">
+        <property name="text">
+         <string>Use AVL</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="redBlackButton">
+        <property name="text">
+         <string>Use RB</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
    </layout>

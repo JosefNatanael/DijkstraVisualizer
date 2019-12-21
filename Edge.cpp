@@ -5,6 +5,7 @@
 
 #include "Edge.h"
 #include "Vertex.h"
+#include <GraphArea.h>
 
 Edge::Edge(Vertex *sourceNode, Vertex *destNode, GraphArea* graphArea, int weight)
     : graphArea(graphArea)

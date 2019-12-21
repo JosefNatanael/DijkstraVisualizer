@@ -4,6 +4,7 @@
 #include <QDebug>
 
 #include "Edge.h"
+#include "GraphArea.h"
 
 /**
  * @brief Vertex constructor.

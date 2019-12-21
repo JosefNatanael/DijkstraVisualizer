@@ -28,12 +28,14 @@ SOURCES += \
         Edge.cpp \
         GraphArea.cpp \
         Utilities/RandomGenDialog.cpp \
+        Utilities/RedBlackPriority.cpp \
         Utilities/UnvisitedVertices.cpp \
         Utilities/WindowHelper.cpp \
         Vertex.cpp \
         main.cpp \
         Utilities/PriorityQueue.tpp \
-        MainWindow.cpp
+        MainWindow.cpp \
+        CoreAlgo.tpp
 
 HEADERS += \
         Edge.h \
@@ -41,6 +43,7 @@ HEADERS += \
         MainWindow.h \
         Utilities/PriorityQueue.h \
         Utilities/RandomGenDialog.h \
+        Utilities/RedBlackPriority.h \
         Utilities/UnvisitedVertices.h \
         Utilities/WindowHelper.h \
         Vertex.h

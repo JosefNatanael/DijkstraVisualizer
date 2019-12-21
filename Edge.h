@@ -3,9 +3,10 @@
 
 #include <QGraphicsItem>
 
-#include "GraphArea.h"
+//#include "GraphArea.h"
 
 class Vertex;
+class GraphArea;
 QT_BEGIN_NAMESPACE
 class QGraphicsSceneMouseEvent;
 QT_END_NAMESPACE

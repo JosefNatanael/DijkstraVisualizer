@@ -31,6 +31,9 @@ MainWindow::MainWindow(QWidget *parent) :
     // Connections
     connect(ui->graphArea, &GraphArea::turnOffStartButton, this, &MainWindow::onTurnOffStartButton);
     connect(ui->graphArea, &GraphArea::turnOffShowPathButton, this, &MainWindow::onTurnOffShowPathButton);
+
+    // Status bar
+    ui->statusBar->showMessage("You can clear the whole screen by pressing File -> New");
 }
 
 /**
@@ -162,7 +165,7 @@ void MainWindow::on_showPathButton_clicked()
     }
 
     // Calculated and show path, then turn off, return
-    if (ui->graphArea->isCalculated && ui->graphArea->isVisualized && cursor == GraphArea::Cursor::SHOWPATH) {
+    if (ui->graphArea->isCalculated && cursor == GraphArea::Cursor::SHOWPATH) {
         ui->graphArea->setCursorMode(GraphArea::Cursor::CALCULATED);
         ui->graphArea->clearColoredEdges();
         return;
@@ -351,8 +354,22 @@ void MainWindow::on_actionDebug_only_triggered()
 
 void MainWindow::on_autoStepButton_clicked()
 {
-    while (!ui->graphArea->actionsList.empty()) {
-        on_stepButton_clicked();
+    for (Vertex* v : ui->graphArea->adjacencyList) {
+        v->setDistanceWhenVis(v->getDistance());
+        v->changeColor(Qt::gray);
+        v->update();
     }
+    ui->graphArea->actionsList.clear();
+    ui->graphArea->clearColoredEdges();
     ui->graphArea->isVisualized = true;
+}
+
+void MainWindow::on_avlButton_clicked()
+{
+    ui->graphArea->useAVL = true;
+}
+
+void MainWindow::on_redBlackButton_clicked()
+{
+    ui->graphArea->useAVL = false;
 }

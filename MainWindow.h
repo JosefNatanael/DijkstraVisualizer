@@ -32,6 +32,10 @@ private slots:
     void on_actionDebug_only_triggered();
     void on_autoStepButton_clicked();
 
+    void on_avlButton_clicked();
+
+    void on_redBlackButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 };
