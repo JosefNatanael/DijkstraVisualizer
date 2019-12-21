@@ -248,7 +248,7 @@ RBNode *RedBlackPriority::insertBST(RBNode*& root, RBNode*& node)
     if (node->vertex->getDistance() < root->vertex->getDistance()) {
         root->left = insertBST(root->left, node);
         root->left->parent = root;
-    } else if (node->vertex->getDistance() > root->vertex->getDistance()) {
+    } else if (node->vertex->getDistance() >= root->vertex->getDistance()) {
         root->right = insertBST(root->right, node);
         root->right->parent = root;
     }

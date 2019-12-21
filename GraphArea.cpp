@@ -10,6 +10,7 @@
 #include <QDateTime>
 #include <QtMath>
 #include <QDebug>
+#include <QScrollBar>
 
 #include <limits>
 
@@ -25,6 +26,8 @@ GraphArea::GraphArea(QWidget *parent)
     //    scene()->installEventFilter(this);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    verticalScrollBar()->blockSignals(true);
+    horizontalScrollBar()->blockSignals(true);
     setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
     setFocusPolicy(Qt::NoFocus);
     QRect screenRect = WindowHelper::screenFromWidget(qApp->desktop())->geometry();
@@ -273,10 +276,12 @@ void GraphArea::startAlgorithm()
     if (useAVL) {
         avlPriority = new PriorityQueue<Vertex*>;
         coreAlgorithm(avlPriority);
+        qDebug() << "Using AVL";
     }
     else {
         rbPriority = new RedBlackPriority;
         coreAlgorithm(rbPriority);
+        qDebug() << "Using RB Tree";
     }
 }
 
