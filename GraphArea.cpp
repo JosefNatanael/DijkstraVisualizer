@@ -279,7 +279,7 @@ void GraphArea::startAlgorithm()
         qDebug() << "Using AVL";
     }
     else {
-        rbPriority = new RedBlackPriority;
+        rbPriority = new RedBlackTree;
         coreAlgorithm(rbPriority);
         qDebug() << "Using RB Tree";
     }

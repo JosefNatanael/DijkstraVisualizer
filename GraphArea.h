@@ -10,7 +10,7 @@
 #include <utility>
 
 #include "Utilities/PriorityQueue.h"
-#include "Utilities/RedBlackPriority.h"
+#include "Utilities/RBTree.h"
 #include "Utilities/UnvisitedVertices.h"
 
 class Vertex;
@@ -88,7 +88,7 @@ private:
     Vertex* startVertex = nullptr;
 
     PriorityQueue<Vertex*>* avlPriority = nullptr;
-    RedBlackPriority* rbPriority = nullptr;
+    RedBlackTree* rbPriority = nullptr;
     UnvisitedVertices* unvisitedVertices = nullptr;
     Vertex* dijkstraSourceVertex = nullptr;
     Vertex* dijkstraCurrentVertex = nullptr;
