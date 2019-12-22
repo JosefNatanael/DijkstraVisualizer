@@ -3,6 +3,10 @@
 
 #include <QDebug>
 
+/*
+ *  AVL Implementation of Priority Queue
+ */
+
 template <typename VertexPtr>
 class PriorityQueue
 {

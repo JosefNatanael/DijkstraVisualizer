@@ -63,6 +63,8 @@ void MainWindow::on_drawVertexButton_clicked()
     ui->startButton->setChecked(false);
     ui->drawEdgeButton->setChecked(false);
     ui->showPathButton->setChecked(false);
+    // Advert
+    ui->statusBar->showMessage("You can clear the whole screen by pressing File -> New");
 
     // Turn off startVertex color
     if (ui->graphArea->startVertex != nullptr) {
@@ -97,6 +99,8 @@ void MainWindow::on_drawEdgeButton_clicked()
     ui->startButton->setChecked(false);
     ui->drawVertexButton->setChecked(false);
     ui->showPathButton->setChecked(false);
+    // Advert
+    ui->statusBar->showMessage("You can clear the whole screen by pressing File -> New");
 
     // Turn off startVertex color
     if (ui->graphArea->startVertex != nullptr) {
@@ -192,6 +196,8 @@ void MainWindow::on_clearButton_clicked()
     ui->drawEdgeButton->setChecked(false);
     ui->drawVertexButton->setChecked(false);
     ui->showPathButton->setChecked(false);
+    // Advert
+    ui->statusBar->showMessage("You can clear the whole screen by pressing File -> New");
 
     // Sets cursor to pointer
     ui->graphArea->setCursorMode(GraphArea::Cursor::POINTER);
@@ -222,6 +228,8 @@ void MainWindow::on_randomGenerateButton_clicked()
         return;
     }
     ui->graphArea->randomGenerator();
+    // Advert
+    ui->statusBar->showMessage("You can clear the whole screen by pressing File -> New");
 }
 
 void MainWindow::on_stepButton_clicked()
@@ -367,9 +375,11 @@ void MainWindow::on_autoStepButton_clicked()
 void MainWindow::on_avlButton_clicked()
 {
     ui->graphArea->useAVL = true;
+    ui->statusBar->showMessage("AVL Mode");
 }
 
 void MainWindow::on_redBlackButton_clicked()
 {
     ui->graphArea->useAVL = false;
+    ui->statusBar->showMessage("Red-Black Mode");
 }

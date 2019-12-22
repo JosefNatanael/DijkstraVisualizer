@@ -27,6 +27,7 @@ CONFIG += c++11
 SOURCES += \
         Edge.cpp \
         GraphArea.cpp \
+        Utilities/RBTree.cpp \
         Utilities/RandomGenDialog.cpp \
         Utilities/UnvisitedVertices.cpp \
         Utilities/WindowHelper.cpp \
